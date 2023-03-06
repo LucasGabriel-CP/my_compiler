@@ -1,0 +1,6 @@
+oi;
+123;
+123a;
+abc;
+teste
+ad;
