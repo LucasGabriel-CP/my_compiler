@@ -6,7 +6,7 @@ lexer::lexer(std::string const& filename) {
         {"-", "sub"},
         {"*", "mul"},
         {"/", "div"},
-        {"^", "div"}
+        {"^", "pow"}
     };
 
     LOperators = {
@@ -164,17 +164,11 @@ token lexer::next_token() {
             backtrack();
             tk = token(tk_type["FNumber"], ans);
             break;
-            //Estado 8
-        case 8:
-            if (MOperators.count("" + cur)) {
-                ans += cur;
-            }
-            break;
         }
         tk = token(state, ans);
     }
     else {
-        errors.push_back({ line, cur });
+        errors.push_back({ line, pos, cur });
     }
     return tk;
 }
@@ -290,6 +284,7 @@ token lexer::next_token() {
     //}
 }
 */
+
 void lexer::backtrack() {
     if (pos) {
         pos--;
@@ -309,9 +304,9 @@ bool lexer::is_eof() {
 
 void lexer::printerrors(std::ostream& os) {
     if (errors.empty()) {
-        os << "Any errors/warningsz\n"; return;
+        os << "Any errors/warnings\n"; return;
     }
-    for (auto &[li, c] : errors) {
-        os << li << std::setfill('.') << std::setw(3) << ": " << c << '\n';
+    for (auto &[li, col, cara] : errors) {
+        os << li << std::setw(4) << col << std::setfill('.') << std::setw(3) << ": " << cara << '\n';
     }
 }

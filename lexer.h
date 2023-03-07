@@ -6,7 +6,10 @@
 #include<vector>
 #include<fstream>
 #include<chrono>
+#include<random>
 #include "token.h"
+
+std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
 
 class lexer{
 private:
@@ -40,11 +43,12 @@ private:
     std::vector<std::string> tk_types;
     std::vector<std::vector<int>> state_matrix;
     std::vector<std::string> content;
-    std::vector<std::pair<int, char>> errors;
+    std::vector<std::tuple<int, int, char>> errors;
     int state = 1, pos = 0, line = 0, ids = 0;
 public:
     lexer(std::string const& filename);
-    std::string analyse_str(std::string const& str, bool& comented);
+    inline std::string analyse_str(std::string const& str, bool& comented);
+    inline token next_token();
     bool is_digit(char const& c);
     bool is_point(char const& c);
     bool is_char(char const& c);
@@ -52,7 +56,6 @@ public:
     bool is_space(char const& c);
     bool is_eof();
     char next_char();
-    token next_token();
     void backtrack();
     void printerrors(std::ostream& os);
 };
