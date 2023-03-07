@@ -1,11 +1,12 @@
 #include "token.h"
 
-token::token(){
+
+token::token() {
     type = -1;
     text = "NULL";
 }
 
-token::token(int const& type_, std::string const& text_){
+token::token(int const& type_, std::string const& text_) {
     type = type_;
     text = text_;
 }

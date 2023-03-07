@@ -9,7 +9,7 @@ lexer::lexer(std::string const& filename) {
         {"^", "div"}
     };
 
-    LOperator = {
+    LOperators = {
         {">", "biiger"},
         {"<", "less"},
         {"==", "equal"},
@@ -128,106 +128,168 @@ char lexer::next_char() {
 }
 
 token lexer::next_token() {
-    try {
-        //Retorna NULL se não tiver nada
-        if (is_eof()) {
-            return token();
-        }
-        state = 1;
-        char cur;
-        std::string ans;
-        //Enquanto tiver coisa pra ler roda isso
-        while (!is_eof()) {
-            //Ler prox caracter
-            cur = next_char();
-            switch (state) {
-            //Estado 1 (inicial)
-            case 1:
-                if (is_char(cur)) {
-                    ans += cur;
-                    state = 2;
-                }
-                else if (is_digit(cur)) {
-                    ans += cur;
-                    state = 4;
-                }
-                else if (is_operator(cur)) {
-                    state = 5; //mudar dps
-                }
-                else if (!is_space(cur)) {
-                    errors.push_back({ line, cur });
-                    //throw std::runtime_error("Unrecognized SYMBOL");
-                }
-                break;
-            //Estado 2
-            case 2:
-                if (is_char(cur) || is_digit(cur)) { //Palavra
-                    ans += cur;
-                }
-                else {
-                    state = 3;  //Estado Terminal
-                }
-                break;
-            //Estado 3 (Terminal)
-            case 3:
-                //Recupera Caracter
-                backtrack();
-                if (!hash_by_word.count(ans)) { //Adiciona palavra na hash
-                    hash_by_word[ans] = ids;
-                    hash_by_value[ids] = ans;
-                    ids++;
-                }
-                return token(tk_type["Identifier"], std::to_string(hash_by_word[ans]));
-            //Estado 4 (Numero)
-            case 4:
-                if (is_digit(cur)) {
-                    ans += cur;
-                }
-                else if (is_point(cur)) {   //Numero Real
-                    ans += cur;
-                    state = 6;
-                }
-                else if (!is_char(cur)) {
-                    state = 5;  //Estado Terminal
-                }
-                else {
-                    errors.push_back({ line, cur }); //Erro lexico
-                    state = 1;
-                    //throw std::runtime_error("Unrecognized NUMBER");
-                }
-                break;
-            //Estado 5 (Terminal)
-            case 5:
-                //Recupera Caracter
-                backtrack();
-                return token(tk_type["INumber"], ans);
-            //Estado 6 (Numero com Ponto Flutuante)
-            case 6:
-                if (is_digit(cur)) {
-                    ans += cur;
-                }
-                else if (!is_char(cur)) {
-                    state = 7; //Estado Terminal
-                }
-                else {
-                    errors.push_back({ line, cur }); //Erro lexico
-                    state = 1;
-                    //throw std::runtime_error("Unrecognized NUMBER");
-                }
-                break;
-            //Estado 7 (Terminal)
-            case 7:
-                backtrack();
-                return token(tk_type["FNumber"], ans);
+    state = 1;
+    char cur;
+    std::string ans = "";
+    token tk;
+    bool ok = true;
+    while (!is_eof() && ok) {
+        cur = next_char();
+        state = state_matrix[state][(int)cur];
+        ok &= (bool)state;
+        ans += cur;
+    }
+    if (terminal_states[state]) {
+        ans.pop_back(); backtrack();
+        switch (state) {
+        //Estado 3 (Identificador)
+        case 3:
+            //Recupera Caracter
+            backtrack();
+            if (!hash_by_word.count(ans)) { //Adiciona palavra na hash
+                hash_by_word[ans] = ids;
+                hash_by_value[ids] = ans;
+                ids++;
             }
+            tk = token(tk_type["Identifier"], std::to_string(hash_by_word[ans]));
+            break;
+        //Estado 5(Numero)
+        case 5:
+            //Recupera Caracter
+            backtrack();
+            tk = token(tk_type["INumber"], ans);
+            break;
+        //Estado 7 (Numero com Ponto Flutuante)
+        case 7:
+            backtrack();
+            tk = token(tk_type["FNumber"], ans);
+            break;
+            //Estado 8
+        case 8:
+            if (MOperators.count("" + cur)) {
+                ans += cur;
+            }
+            break;
         }
-        return token();
+        tk = token(state, ans);
     }
-    catch (const std::runtime_error& error) {
-        std::cout << error.what() << '\n';
+    else {
+        errors.push_back({ line, cur });
     }
+    return tk;
 }
 
+/*
+token lexer::next_token() {
+    //try {
+    //Retorna NULL se não tiver nada
+    if (is_eof()) {
+        return token();
+    }
+    state = 1;
+    char cur;
+    std::string ans;
+    //Enquanto tiver coisa pra ler roda isso
+    while (!is_eof()) {
+        //Ler prox caracter
+        cur = next_char();
+        switch (state) {
+        //Estado 1 (inicial)
+        case 1:
+            if (is_char(cur)) {
+                ans += cur;
+                state = 2;
+            }
+            else if (is_digit(cur)) {
+                ans += cur;
+                state = 4;
+            }
+            else if (is_operator(cur)) {
+                state = 5; //mudar dps
+            }
+            else if (MOperators.count("" + cur)) {
+                state = 8;
+            }
+            else if (!is_space(cur)) {
+                errors.push_back({ line, cur });
+                //throw std::runtime_error("Unrecognized SYMBOL");
+            }
+            break;
+        //Estado 2
+        case 2:
+            if (is_char(cur) || is_digit(cur)) { //Palavra
+                ans += cur;
+            }
+            else {
+                state = 3;  //Estado Terminal
+            }
+            break;
+        //Estado 3 (Terminal)
+        case 3:
+            //Recupera Caracter
+            backtrack();
+            if (!hash_by_word.count(ans)) { //Adiciona palavra na hash
+                hash_by_word[ans] = ids;
+                hash_by_value[ids] = ans;
+                ids++;
+            }
+            return token(tk_type["Identifier"], std::to_string(hash_by_word[ans]));
+        //Estado 4 (Numero)
+        case 4:
+            if (is_digit(cur)) {
+                ans += cur;
+            }
+            else if (is_point(cur)) {   //Numero Real
+                ans += cur;
+                state = 6;
+            }
+            else if (!is_char(cur)) {
+                state = 5;  //Estado Terminal
+            }
+            else {
+                errors.push_back({ line, cur }); //Erro lexico
+                state = 1;
+                //throw std::runtime_error("Unrecognized NUMBER");
+            }
+            break;
+        //Estado 5 (Terminal)
+        case 5:
+            //Recupera Caracter
+            backtrack();
+            return token(tk_type["INumber"], ans);
+        //Estado 6 (Numero com Ponto Flutuante)
+        case 6:
+            if (is_digit(cur)) {
+                ans += cur;
+            }
+            else if (!is_char(cur)) {
+                state = 7; //Estado Terminal
+            }
+            else {
+                errors.push_back({ line, cur }); //Erro lexico
+                state = 1;
+                //throw std::runtime_error("Unrecognized NUMBER");
+            }
+            break;
+        //Estado 7 (Terminal)
+        case 7:
+            backtrack();
+            return token(tk_type["FNumber"], ans);
+        //Estado 8
+        case 8:
+            if (MOperators.count("" + cur)) {
+                ans += cur;
+            }
+            break;
+        }
+    }
+    return token();
+    //}
+    //catch (const std::runtime_error& error) {
+    //    std::cout << error.what() << '\n';
+    //}
+}
+*/
 void lexer::backtrack() {
     if (pos) {
         pos--;

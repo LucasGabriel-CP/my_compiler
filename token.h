@@ -17,4 +17,3 @@ public:
     std::string get_text();
     std::ostream& operator<<(std::ostream& os) const;
 };
-

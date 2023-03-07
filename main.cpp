@@ -23,7 +23,6 @@ std::ostream& operator<<(std::ostream& os, token const &tk) {
     return os << "[" << t << ", " << tk.text << "]\n";
 }
 
-
 int main(int argc, char** argv) {
     std::string str; std::cin >> str;
     lexer lx(str);
