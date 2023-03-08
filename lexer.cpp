@@ -1,5 +1,10 @@
 #include "lexer.h"
 
+/*
+Construtor
+Parametros:
+    filename -> Nome do arquivo com o programa fonte
+*/
 lexer::lexer(std::string const& filename) {
     MOperators = {
         {"+", "add"},
@@ -33,6 +38,7 @@ lexer::lexer(std::string const& filename) {
     read_file(filename);
 }
 
+//Funcao para adicionar palavras reservadas
 void lexer::add_reserved_words() {
     reserved_words.insert("int");
     reserved_words.insert("float");
@@ -47,6 +53,7 @@ void lexer::add_reserved_words() {
     reserved_words.insert("print");
 }
 
+//Funcao para adicionar transicoes
 void lexer::give_adjacence() {
     state_matrix.assign(256, std::unordered_map<char, int>());
     terminal_states.assign(256, false);
@@ -96,21 +103,30 @@ void lexer::give_adjacence() {
     state_matrix[16][(char)39] = 17;
 }
 
+/*
+Funcao para ler o programa fonte
+Parametros:
+    filename -> Nome do arquivo com o programa fonte
+*/
 void lexer::read_file(std::string const& filename) {
+    //Abrir arquivo
     std::ifstream File(filename);
     if (!File.good()) {
         std::cerr << "ERRO: Arquivo nao existe\n";
         abort();
     }
 
+    
     std::string aux, str;
     bool comented = false;
     //Ler arquivos e imprimir no novo arquivo
     while (std::getline(File, str)) {
+        //Analisa a string
         aux = analyse_str(str, comented);
-        if (!aux.empty())
+        if (!aux.empty())   //Se tiver algo adiciona
             content.push_back(aux);
     }
+    //Adicionar quebra de linha caso nao tenha
     if (content.empty() || content.back().back() != '\n')
         content.push_back("\n");
 }
@@ -118,7 +134,7 @@ void lexer::read_file(std::string const& filename) {
 /*
 Função para analisar a string
 Parametros:
-    str -> string para analisar
+    str      -> string para analisar
     comented -> se está dentro de um bloco comentado
 */
 std::string lexer::analyse_str(std::string const& str, bool& comented) {
@@ -169,6 +185,7 @@ std::string lexer::analyse_str(std::string const& str, bool& comented) {
     return ans;
 }
 
+//Funcao para pegar o proximo caracter do arquivo
 char lexer::next_char() {
     char ans = content[line][pos++];
     if (pos == (int)content[line].size()) {
@@ -178,31 +195,35 @@ char lexer::next_char() {
     return ans;
 }
 
+//Funcao para pegar o proximo token
 token lexer::next_token() {
     state = 1;
     char cur;
     std::string ans = "";
     token tk;
     bool ok = true;
+    //Analisar caracteres ate chegar no eof ou em um estado final
     while (!is_eof() && ok) {
-        cur = next_char();
-        if (state_matrix[state].count(cur)) {
+        cur = next_char();                      //Pega o prox caracter
+        if (state_matrix[state].count(cur)) {   //Se tiver transicao vai pra ela
             state = state_matrix[state][cur];
         }
         else {
-            state = state_matrix[state]['$'];
+            state = state_matrix[state]['$'];   //Se nao tiver vai pra erro
         }
         ok &= (bool)((bool)state && !terminal_states[state]);
+
+        //Adiciona a string resultante se estiver em um estado maior que 1 ou
+        //se nao for espaco no primeiro estado
         if (state > 1 || state == 1 && !is_space(cur))
             ans += cur;
     }
-    if (terminal_states[state]) {
+    
+    if (terminal_states[state]) { //Se for estado terminal deu bom
         switch (state) {
         //Estado 3 (Identificador)
         case 3:
-            //Recupera Caracter
-            backtrack(ans);
-
+            backtrack(ans); //Recupera Caracter
             if (reserved_words.count(ans)) {
                 tk = token(ans, ans, { line, pos });
             }
@@ -217,7 +238,6 @@ token lexer::next_token() {
             break;
         //Estado 5(Numero)
         case 5:
-            //Recupera Caracter
             backtrack(ans);
             tk = token("INumber", ans, { line, pos });
             break;
@@ -226,46 +246,66 @@ token lexer::next_token() {
             backtrack(ans);
             tk = token("FNumber", ans, { line, pos });
             break;
+        //Estado 9 (Operador matematico)
         case 9:
             backtrack(ans);
             tk = token("MOperator", MOperators[ans], { line, pos });
             break;
+        //Estado 12 (Exprecao de atribuicao)
         case 12:
             backtrack(ans);
             tk = token("exp_atri", ans, { line, pos });
             break;
+        //Estado 15 (Operador de relacao)
         case 15:
             backtrack(ans);
             tk = token("op_rel", LOperators[ans], { line, pos });
             break;
+        //Estado 18 (Frase)
         case 18:
             tk = token("Frase", ans, { line, pos });
             break;
+        //Estado 19 (Chaves/Parenteses)
         case 19:
             tk = token(ans, ans, { line, pos });
             break;
+        //Estado 20 (Delimitadores)
         case 20:
             tk = token(ans, ans, { line, pos });
             break;
         }
     }
-    else if (!is_eof() || is_eof() && !is_space(cur)) {
+    else if (!is_eof() || is_eof() && !is_space(cur)) { //Senao deu ruim
         errors.push_back({ line, pos, cur });
         tk.set_type("ERROR");
     }
+
     return tk;
 }
 
+/*
+Funcao para verificar se e espaco
+Parametros:
+    c -> caracter a ser analisado
+*/
 bool lexer::is_space(char const& c) {
     return c == ' ' || c == '\t' || c == '\n' || c == '\r';
 }
 
+//Funcao para verificar se chegou no fim do arquivo
 bool lexer::is_eof() {
     return line == (int)content.size();
 }
 
+/*
+Funcao para retroceder caracter
+Parametros:
+    ans -> lexema com caracter alheio
+*/
 void lexer::backtrack(std::string &ans) {
-    if (!ans.empty()) ans.pop_back();
+    if (!ans.empty()) {
+        ans.pop_back();
+    }
     if (pos) {
         pos--;
     }
@@ -278,11 +318,16 @@ void lexer::backtrack(std::string &ans) {
     }
 }
 
+/*
+Funcao para printar erros
+Parametros:
+    os -> arquivo de saida
+*/
 void lexer::printerrors(std::ostream& os) {
     if (errors.empty()) {
         os << "Any errors/warnings\n"; return;
     }
-    os << "Errors/warnings:\n";
+    os << "Errors/Warnings:\n";
     for (auto &[li, col, cara] : errors) {
         os << "Linha: " << li << std::setw(12)
            << "Coluna: " << col << std::setfill('.') << std::setw(7)

@@ -1,8 +1,9 @@
-[Identifier, 0, 0, 4] [op_rel, equal, 0, 7] [FNumber, 13., 0, 11] [MOperator, add, 0, 12] [INumber, 14, 0, 14] [;, ;, 0, 16]
+[Identifier, 0, 0, 4] [op_rel, equal, 0, 7] [FNumber, 13., 0, 11] [MOperator, add, 0, 12] [INumber, 1, 0, 13] [INumber, 4, 0, 15] [;, ;, 0, 16]
 [Identifier, 1, 1, 9] [exp_atri, =, 1, 11] [Identifier, 2, 1, 19] [MOperator, add, 1, 21] [(, (, 1, 23] [Identifier, 3, 1, 29] [MOperator, sub, 1, 31] [Identifier, 4, 1, 36] [), ), 1, 37] [;, ;, 1, 38]
 [Identifier, 5, 2, 2] [Identifier, 6, 2, 8] [(, (, 2, 9] [), ), 2, 10] [;, ;, 2, 11]
 [Identifier, 0, 3, 4] [INumber, 5, 3, 6] [;, ;, 3, 7]
 [int, int, 4, 3] [Identifier, 7, 4, 8] [exp_atri, =, 4, 10] [INumber, 40, 4, 13] [MOperator, add, 4, 15] [INumber, 1, 4, 17] [;, ;, 4, 18]
 [Identifier, 8, 5, 7] [;, ;, 5, 8]
-Errors/warnings:
-Linha: 0    Coluna: 15.....: $
+-------------------------------------------------------------------------------
+Errors/Warnings:
+Linha: 0----Coluna: 14.....: $

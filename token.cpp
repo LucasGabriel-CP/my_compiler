@@ -1,6 +1,5 @@
 #include "token.h"
 
-
 token::token() {
     pos = { -1, -1 };
     type = "NULL";

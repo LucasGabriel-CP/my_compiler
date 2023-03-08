@@ -1,4 +1,6 @@
 #pragma once
+
+//Import das bibliotecas necessarias
 #include<iostream>
 #include<unordered_map>
 #include<unordered_set>
@@ -10,11 +12,10 @@
 #include<random>
 #include "token.h"
 
-
 class lexer{
 private:
 
-    //Hashes necessarias
+    //Funcao hash
     struct custom_hash {
         static uint64_t splitmix64(uint64_t x) {
             x += 0x9e3779b97f4a7c15;
@@ -33,6 +34,7 @@ private:
             return splitmix64(std::hash<std::string>()(x) + FIXED_RANDOM);
         }
     };
+    //Tabelas de simbolos e de palavras reservadas
     std::unordered_map<std::string, std::string, custom_hash> MOperators;
     std::unordered_map<std::string, std::string, custom_hash> LOperators;
     std::unordered_map<std::string, int, custom_hash> tk_type;
@@ -40,13 +42,16 @@ private:
     std::unordered_map<int, std::string, custom_hash> hash_by_value;
     std::unordered_set<std::string, custom_hash> reserved_words;
 
+    //Demais variaveis
     std::vector<bool> terminal_states;
     std::vector<std::string> tk_types;
     std::vector<std::unordered_map<char, int>> state_matrix;
     std::vector<std::string> content;
     std::vector<std::tuple<int, int, char>> errors;
     int state = 1, pos = 0, line = 0, ids = 0;
+
 public:
+    //Metodos do analisador lexico
     lexer(std::string const& filename);
     void add_reserved_words();
     void give_adjacence();

@@ -1,12 +1,12 @@
 #pragma once
 #include <iostream>
-#include<unordered_map>
+#include <utility>
+#include<string>
 
 class token{
 private:
     std::pair<int, int> pos;
-    std::string type;
-    std::string text;
+    std::string type, text;
 public:
     token();
     token(std::string const& type_, std::string const& text_, std::pair<int, int> const& pos_);
