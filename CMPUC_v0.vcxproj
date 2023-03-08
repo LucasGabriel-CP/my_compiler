@@ -143,6 +143,12 @@
     <ClInclude Include="lexer.h" />
     <ClInclude Include="token.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="input2.cmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="output.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

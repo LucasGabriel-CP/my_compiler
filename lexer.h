@@ -9,7 +9,6 @@
 #include<random>
 #include "token.h"
 
-std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
 
 class lexer{
 private:
@@ -28,6 +27,11 @@ private:
             return splitmix64(x + FIXED_RANDOM);
         }
 
+        /*size_t operator()(char x) const {
+            static const uint64_t FIXED_RANDOM = std::chrono::steady_clock::now().time_since_epoch().count();
+            return splitmix64((int)x + FIXED_RANDOM);
+        }*/
+
         size_t operator()(std::string x) const {
             static const uint64_t FIXED_RANDOM = std::chrono::steady_clock::now().time_since_epoch().count();
             return splitmix64(std::hash<std::string>()(x) + FIXED_RANDOM);
@@ -41,14 +45,15 @@ private:
 
     std::vector<bool> terminal_states;
     std::vector<std::string> tk_types;
-    std::vector<std::vector<int>> state_matrix;
+    std::vector<std::unordered_map<char, int>> state_matrix;
     std::vector<std::string> content;
     std::vector<std::tuple<int, int, char>> errors;
     int state = 1, pos = 0, line = 0, ids = 0;
 public:
     lexer(std::string const& filename);
-    inline std::string analyse_str(std::string const& str, bool& comented);
-    inline token next_token();
+    void give_adjacence();
+    std::string analyse_str(std::string const& str, bool& comented);
+    token next_token();
     bool is_digit(char const& c);
     bool is_point(char const& c);
     bool is_char(char const& c);

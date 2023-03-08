@@ -2,16 +2,18 @@
 
 
 token::token() {
-    type = -1;
+    pos = { -1, -1 };
+    type = "NULL";
     text = "NULL";
 }
 
-token::token(int const& type_, std::string const& text_) {
+token::token(std::string const& type_, std::string const& text_, std::pair<int, int> const& pos_) {
     type = type_;
     text = text_;
+    pos = pos_;
 }
 
-void token::set_type(int const& type_) {
+void token::set_type(std::string const& type_) {
     type = type_;
 }
 
@@ -19,7 +21,11 @@ void token::set_text(std::string const& text_) {
     text = text_;
 }
 
-int token::get_type() {
+void token::set_pos(std::pair<int, int> const& pos_) {
+    pos = pos_;
+}
+
+std::string token::get_type() {
     return type;
 }
 
@@ -27,23 +33,10 @@ std::string token::get_text() {
     return text;
 }
 
+std::pair<int, int> token::get_pos() {
+    return pos;
+}
+
 std::ostream& token::operator<<(std::ostream& os) const {
-    std::string t;
-    switch (type) {
-    case 0:
-        t = "Identifier"; break;
-    case 1:
-        t = "INumber"; break;
-    case 2:
-        t = "FNumber"; break;
-    case 3:
-        t = "LOperator"; break;
-    case 4:
-        t = "Ponctuation"; break;
-    case 5:
-        t = "MOperator"; break;
-    case 6:
-        t = "Reserved Word"; break;
-    }
     return os << "type: [" << type << "] text: [" << text << "]\n";
 }

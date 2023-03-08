@@ -2,29 +2,17 @@
 #include "lexer.h"
 #include "token.h"
 
-std::ostream& operator<<(std::ostream& os, token const &tk) {
-    std::string t;
-    switch (tk.type) {
-    case 0:
-        t = "Identifier"; break;
-    case 1:
-        t = "INumber"; break;
-    case 2:
-        t = "FNumber"; break;
-    case 3:
-        t = "LOperator"; break;
-    case 4:
-        t = "Ponctuation"; break;
-    case 5:
-        t = "MOperator"; break;
-    case 6:
-        t = "Reserved Word"; break;
-    }
-    return os << "[" << t << ", " << tk.text << "]\n";
+std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
+
+std::ostream& operator<<(std::ostream& os, token &tk) {
+    auto [x, y] = tk.get_pos();
+    std::string t = tk.get_type(), tx = tk.get_text();
+    return os << "[" << t << ", " << tx << ", " << x << ", " << y << "]\n";
 }
 
 int main(int argc, char** argv) {
-    std::string str; std::cin >> str;
+    std::string str = "input2.cmp";
+    //std::cin >> str;
     lexer lx(str);
     
     token tk = lx.next_token();

@@ -1,11 +1,12 @@
-type: [Identifier] text: [0]
+[Identifier, 0, 0, 4]
 
-type: [Identifier] text: [1]
+[op_rel, equal, 0, 7]
 
-type: [Identifier] text: [2]
+[INumber, 13, 0, 10]
 
-type: [INumber] text: [5]
+[MOperator, add, 0, 11]
 
-type: [Identifier] text: [3]
+[INumber, 14, 0, 13]
 
-Any errors/warningsz
+Errors/warnings:
+Linha: 0  Coluna: 14.....: $

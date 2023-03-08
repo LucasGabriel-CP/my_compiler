@@ -4,16 +4,17 @@
 
 class token{
 private:
-public:
-    int type;
+    std::pair<int, int> pos;
+    std::string type;
     std::string text;
-    static const int tk_identifier  = 0, tk_inumber = 1, tk_fnumber = 2, tk_operator = 3,
-        tk_ponctuation = 4, tk_assign = 5;
-    token(int const& type_, std::string const& text_);
+public:
     token();
-    void set_type(int const& type_);
+    token(std::string const& type_, std::string const& text_, std::pair<int, int> const& pos_);
+    void set_type(std::string const& type_);
     void set_text(std::string const& text_);
-    int get_type();
+    void set_pos(std::pair<int, int> const& pos_);
+    std::string get_type();
     std::string get_text();
+    std::pair<int, int> get_pos();
     std::ostream& operator<<(std::ostream& os) const;
 };

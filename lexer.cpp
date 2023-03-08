@@ -6,11 +6,12 @@ lexer::lexer(std::string const& filename) {
         {"-", "sub"},
         {"*", "mul"},
         {"/", "div"},
+        {"%", "mod"},
         {"^", "pow"}
     };
 
     LOperators = {
-        {">", "biiger"},
+        {">", "bigger"},
         {"<", "less"},
         {"==", "equal"},
         {">=", "bigger_equal"},
@@ -27,6 +28,10 @@ lexer::lexer(std::string const& filename) {
         {"Ponctuation", 6}
     };
 
+    give_adjacence();
+
+
+
     std::ifstream File(filename);
     if (!File.good()) {
         std::cerr << "ERRO: Arquivo nao existe\n";
@@ -42,6 +47,54 @@ lexer::lexer(std::string const& filename) {
             content.push_back(aux);
     }
     content.push_back("\n");    
+}
+
+void lexer::give_adjacence() {
+    state_matrix.assign(256, std::unordered_map<char, int>());
+    terminal_states.assign(256, false);
+    terminal_states[3]  = terminal_states[5]  = true;
+    terminal_states[7]  = terminal_states[9]  = true;
+    terminal_states[10] = terminal_states[12] = true;
+    terminal_states[15] = terminal_states[18] = true;
+    //Erro
+    state_matrix[1]['$'] = 0;
+    state_matrix[1][' '] = 1;
+    state_matrix[1]['\n'] = 1;
+    state_matrix[1]['\t'] = 1;
+    state_matrix[1]['\r'] = 1;
+    state_matrix[2]['$'] = 3;
+    state_matrix[4]['$'] = 5;
+    state_matrix[6]['$'] = 7;
+    state_matrix[8]['$'] = 9;
+    state_matrix[11]['$'] = 12;
+    state_matrix[13]['$'] = 15;
+    state_matrix[14]['$'] = 15;
+    state_matrix[17]['$'] = 18;
+
+    for (char i = 'a'; i <= 'z'; i++) {
+        state_matrix[1][i] = state_matrix[1][(int)i - 32] = 2;
+        state_matrix[2][i] = state_matrix[2][(int)i - 32] = 2;
+    }
+
+    for (char i = '0'; i <= '9'; i++) {
+        state_matrix[1][i] = 4;
+        state_matrix[2][i] = 2;
+        state_matrix[4][i] = 4;
+        state_matrix[6][i] = 6;
+    }
+    state_matrix[4]['.'] = 6;
+    
+    state_matrix[1]['-'] = state_matrix[1]['+'] =
+        state_matrix[1]['/'] = state_matrix[1]['*'] = 
+        state_matrix[1]['%'] = state_matrix[1]['^'] = 8;
+
+    //state_matrix[1].push_back(9); plus assign
+    state_matrix[1]['='] = 11;
+    state_matrix[1]['<'] = state_matrix[1]['>'] = state_matrix[1]['!'] = 14;
+    state_matrix[11]['='] = state_matrix[14]['='] = 13;
+
+    state_matrix[1][(char)39] = 16;
+    state_matrix[16][(char)39] = 17;
 }
 
 /*
@@ -135,12 +188,17 @@ token lexer::next_token() {
     bool ok = true;
     while (!is_eof() && ok) {
         cur = next_char();
-        state = state_matrix[state][(int)cur];
-        ok &= (bool)state;
-        ans += cur;
+        if (state_matrix[state].count(cur)) {
+            state = state_matrix[state][cur];
+        }
+        else {
+            state = state_matrix[state]['$'];
+        }
+        ok &= (bool)((bool)state && !terminal_states[state]);
+        if (ok && (state != 1 || state == 1 && !is_space(cur)))
+            ans += cur;
     }
     if (terminal_states[state]) {
-        ans.pop_back(); backtrack();
         switch (state) {
         //Estado 3 (Identificador)
         case 3:
@@ -151,23 +209,37 @@ token lexer::next_token() {
                 hash_by_value[ids] = ans;
                 ids++;
             }
-            tk = token(tk_type["Identifier"], std::to_string(hash_by_word[ans]));
+            tk = token("Identifier", std::to_string(hash_by_word[ans]), { line, pos });
             break;
         //Estado 5(Numero)
         case 5:
             //Recupera Caracter
             backtrack();
-            tk = token(tk_type["INumber"], ans);
+            tk = token("INumber", ans, { line, pos });
             break;
         //Estado 7 (Numero com Ponto Flutuante)
         case 7:
             backtrack();
-            tk = token(tk_type["FNumber"], ans);
+            tk = token("FNumber", ans, { line, pos });
+            break;
+        case 9:
+            backtrack();
+            tk = token("MOperator", MOperators[ans], { line, pos });
+            break;
+        case 12:
+            backtrack();
+            tk = token("exp_atri", ans, { line, pos });
+            break;
+        case 15:
+            backtrack();
+            tk = token("op_rel", LOperators[ans], { line, pos });
+            break;
+        case 18:
+            tk = token("Frase", ans, { line, pos });
             break;
         }
-        tk = token(state, ans);
     }
-    else {
+    else if (!is_eof() || is_eof() && !is_space(cur)) {
         errors.push_back({ line, pos, cur });
     }
     return tk;
@@ -306,7 +378,10 @@ void lexer::printerrors(std::ostream& os) {
     if (errors.empty()) {
         os << "Any errors/warnings\n"; return;
     }
+    os << "Errors/warnings:\n";
     for (auto &[li, col, cara] : errors) {
-        os << li << std::setw(4) << col << std::setfill('.') << std::setw(3) << ": " << cara << '\n';
+        os << "Linha: " << li << std::setw(12)
+           << "Coluna: " << col << std::setfill('.') << std::setw(7)
+           << ": " << cara << '\n';
     }
 }
