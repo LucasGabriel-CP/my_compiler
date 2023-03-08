@@ -28,25 +28,23 @@ lexer::lexer(std::string const& filename) {
         {"Ponctuation", 6}
     };
 
+    add_reserved_words();
     give_adjacence();
+    read_file(filename);
+}
 
-
-
-    std::ifstream File(filename);
-    if (!File.good()) {
-        std::cerr << "ERRO: Arquivo nao existe\n";
-        abort();
-    }
-
-    std::string aux, str;
-    bool comented = false;
-    //Ler arquivos e imprimir no novo arquivo
-    while (std::getline(File, str)) {
-        aux = analyse_str(str, comented);
-        if (!aux.empty())
-            content.push_back(aux);
-    }
-    content.push_back("\n");    
+void lexer::add_reserved_words() {
+    reserved_words.insert("int");
+    reserved_words.insert("float");
+    reserved_words.insert("char");
+    reserved_words.insert("string");
+    reserved_words.insert("if");
+    reserved_words.insert("else");
+    reserved_words.insert("while");
+    reserved_words.insert("def");
+    reserved_words.insert("main");
+    reserved_words.insert("read");
+    reserved_words.insert("print");
 }
 
 void lexer::give_adjacence() {
@@ -56,12 +54,14 @@ void lexer::give_adjacence() {
     terminal_states[7]  = terminal_states[9]  = true;
     terminal_states[10] = terminal_states[12] = true;
     terminal_states[15] = terminal_states[18] = true;
-    //Erro
+    terminal_states[19] = terminal_states[20] = true;
+
+    state_matrix[1][' ']  = state_matrix[1]['\n'] = 1;
+    state_matrix[1]['\t'] = state_matrix[1]['\r'] = 1;
+    state_matrix[1]['('] = state_matrix[1][')'] = 19;
+    state_matrix[1]['{'] = state_matrix[1]['}'] = 19;
+    state_matrix[1][','] = state_matrix[1][';'] = 20;
     state_matrix[1]['$'] = 0;
-    state_matrix[1][' '] = 1;
-    state_matrix[1]['\n'] = 1;
-    state_matrix[1]['\t'] = 1;
-    state_matrix[1]['\r'] = 1;
     state_matrix[2]['$'] = 3;
     state_matrix[4]['$'] = 5;
     state_matrix[6]['$'] = 7;
@@ -77,16 +77,15 @@ void lexer::give_adjacence() {
     }
 
     for (char i = '0'; i <= '9'; i++) {
-        state_matrix[1][i] = 4;
+        state_matrix[1][i] = state_matrix[4][i] = 4;
         state_matrix[2][i] = 2;
-        state_matrix[4][i] = 4;
         state_matrix[6][i] = 6;
     }
     state_matrix[4]['.'] = 6;
     
-    state_matrix[1]['-'] = state_matrix[1]['+'] =
-        state_matrix[1]['/'] = state_matrix[1]['*'] = 
-        state_matrix[1]['%'] = state_matrix[1]['^'] = 8;
+    state_matrix[1]['-'] = state_matrix[1]['+'] = 8;
+    state_matrix[1]['/'] = state_matrix[1]['*'] = 8;
+    state_matrix[1]['%'] = state_matrix[1]['^'] = 8;
 
     //state_matrix[1].push_back(9); plus assign
     state_matrix[1]['='] = 11;
@@ -95,6 +94,25 @@ void lexer::give_adjacence() {
 
     state_matrix[1][(char)39] = 16;
     state_matrix[16][(char)39] = 17;
+}
+
+void lexer::read_file(std::string const& filename) {
+    std::ifstream File(filename);
+    if (!File.good()) {
+        std::cerr << "ERRO: Arquivo nao existe\n";
+        abort();
+    }
+
+    std::string aux, str;
+    bool comented = false;
+    //Ler arquivos e imprimir no novo arquivo
+    while (std::getline(File, str)) {
+        aux = analyse_str(str, comented);
+        if (!aux.empty())
+            content.push_back(aux);
+    }
+    if (content.empty() || content.back().back() != '\n')
+        content.push_back("\n");
 }
 
 /*
@@ -151,26 +169,6 @@ std::string lexer::analyse_str(std::string const& str, bool& comented) {
     return ans;
 }
 
-bool lexer::is_digit(char const& c) {
-    return c >= '0' && c <= '9';
-}
-
-bool lexer::is_point(char const& c) {
-    return c == '.';
-}
-
-bool lexer::is_char(char const& c) {
-    return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z';
-}
-
-bool lexer::is_operator(char const& c) {
-    return c == '>' || c == '<' || c == '=' || c == '!';
-}
-
-bool lexer::is_space(char const& c) {
-    return c == ' ' || c == '\t' || c == '\n' || c == '\r';
-}
-
 char lexer::next_char() {
     char ans = content[line][pos++];
     if (pos == (int)content[line].size()) {
@@ -195,7 +193,7 @@ token lexer::next_token() {
             state = state_matrix[state]['$'];
         }
         ok &= (bool)((bool)state && !terminal_states[state]);
-        if (ok && (state != 1 || state == 1 && !is_space(cur)))
+        if (state > 1 || state == 1 && !is_space(cur))
             ans += cur;
     }
     if (terminal_states[state]) {
@@ -203,161 +201,71 @@ token lexer::next_token() {
         //Estado 3 (Identificador)
         case 3:
             //Recupera Caracter
-            backtrack();
-            if (!hash_by_word.count(ans)) { //Adiciona palavra na hash
-                hash_by_word[ans] = ids;
-                hash_by_value[ids] = ans;
-                ids++;
+            backtrack(ans);
+
+            if (reserved_words.count(ans)) {
+                tk = token(ans, ans, { line, pos });
             }
-            tk = token("Identifier", std::to_string(hash_by_word[ans]), { line, pos });
+            else {
+                if (!hash_by_word.count(ans)) { //Adiciona palavra na hash
+                    hash_by_word[ans] = ids;
+                    hash_by_value[ids] = ans;
+                    ids++;
+                }
+                tk = token("Identifier", std::to_string(hash_by_word[ans]), { line, pos });
+            }
             break;
         //Estado 5(Numero)
         case 5:
             //Recupera Caracter
-            backtrack();
+            backtrack(ans);
             tk = token("INumber", ans, { line, pos });
             break;
         //Estado 7 (Numero com Ponto Flutuante)
         case 7:
-            backtrack();
+            backtrack(ans);
             tk = token("FNumber", ans, { line, pos });
             break;
         case 9:
-            backtrack();
+            backtrack(ans);
             tk = token("MOperator", MOperators[ans], { line, pos });
             break;
         case 12:
-            backtrack();
+            backtrack(ans);
             tk = token("exp_atri", ans, { line, pos });
             break;
         case 15:
-            backtrack();
+            backtrack(ans);
             tk = token("op_rel", LOperators[ans], { line, pos });
             break;
         case 18:
             tk = token("Frase", ans, { line, pos });
             break;
+        case 19:
+            tk = token(ans, ans, { line, pos });
+            break;
+        case 20:
+            tk = token(ans, ans, { line, pos });
+            break;
         }
     }
     else if (!is_eof() || is_eof() && !is_space(cur)) {
         errors.push_back({ line, pos, cur });
+        tk.set_type("ERROR");
     }
     return tk;
 }
 
-/*
-token lexer::next_token() {
-    //try {
-    //Retorna NULL se não tiver nada
-    if (is_eof()) {
-        return token();
-    }
-    state = 1;
-    char cur;
-    std::string ans;
-    //Enquanto tiver coisa pra ler roda isso
-    while (!is_eof()) {
-        //Ler prox caracter
-        cur = next_char();
-        switch (state) {
-        //Estado 1 (inicial)
-        case 1:
-            if (is_char(cur)) {
-                ans += cur;
-                state = 2;
-            }
-            else if (is_digit(cur)) {
-                ans += cur;
-                state = 4;
-            }
-            else if (is_operator(cur)) {
-                state = 5; //mudar dps
-            }
-            else if (MOperators.count("" + cur)) {
-                state = 8;
-            }
-            else if (!is_space(cur)) {
-                errors.push_back({ line, cur });
-                //throw std::runtime_error("Unrecognized SYMBOL");
-            }
-            break;
-        //Estado 2
-        case 2:
-            if (is_char(cur) || is_digit(cur)) { //Palavra
-                ans += cur;
-            }
-            else {
-                state = 3;  //Estado Terminal
-            }
-            break;
-        //Estado 3 (Terminal)
-        case 3:
-            //Recupera Caracter
-            backtrack();
-            if (!hash_by_word.count(ans)) { //Adiciona palavra na hash
-                hash_by_word[ans] = ids;
-                hash_by_value[ids] = ans;
-                ids++;
-            }
-            return token(tk_type["Identifier"], std::to_string(hash_by_word[ans]));
-        //Estado 4 (Numero)
-        case 4:
-            if (is_digit(cur)) {
-                ans += cur;
-            }
-            else if (is_point(cur)) {   //Numero Real
-                ans += cur;
-                state = 6;
-            }
-            else if (!is_char(cur)) {
-                state = 5;  //Estado Terminal
-            }
-            else {
-                errors.push_back({ line, cur }); //Erro lexico
-                state = 1;
-                //throw std::runtime_error("Unrecognized NUMBER");
-            }
-            break;
-        //Estado 5 (Terminal)
-        case 5:
-            //Recupera Caracter
-            backtrack();
-            return token(tk_type["INumber"], ans);
-        //Estado 6 (Numero com Ponto Flutuante)
-        case 6:
-            if (is_digit(cur)) {
-                ans += cur;
-            }
-            else if (!is_char(cur)) {
-                state = 7; //Estado Terminal
-            }
-            else {
-                errors.push_back({ line, cur }); //Erro lexico
-                state = 1;
-                //throw std::runtime_error("Unrecognized NUMBER");
-            }
-            break;
-        //Estado 7 (Terminal)
-        case 7:
-            backtrack();
-            return token(tk_type["FNumber"], ans);
-        //Estado 8
-        case 8:
-            if (MOperators.count("" + cur)) {
-                ans += cur;
-            }
-            break;
-        }
-    }
-    return token();
-    //}
-    //catch (const std::runtime_error& error) {
-    //    std::cout << error.what() << '\n';
-    //}
+bool lexer::is_space(char const& c) {
+    return c == ' ' || c == '\t' || c == '\n' || c == '\r';
 }
-*/
 
-void lexer::backtrack() {
+bool lexer::is_eof() {
+    return line == (int)content.size();
+}
+
+void lexer::backtrack(std::string &ans) {
+    if (!ans.empty()) ans.pop_back();
     if (pos) {
         pos--;
     }
@@ -368,10 +276,6 @@ void lexer::backtrack() {
     else {
         exit(123);
     }
-}
-
-bool lexer::is_eof() {
-    return line == (int)content.size();
 }
 
 void lexer::printerrors(std::ostream& os) {

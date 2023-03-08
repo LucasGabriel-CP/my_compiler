@@ -1,6 +1,7 @@
 #pragma once
 #include<iostream>
 #include<unordered_map>
+#include<unordered_set>
 #include<iomanip>
 #include<string>
 #include<vector>
@@ -27,11 +28,6 @@ private:
             return splitmix64(x + FIXED_RANDOM);
         }
 
-        /*size_t operator()(char x) const {
-            static const uint64_t FIXED_RANDOM = std::chrono::steady_clock::now().time_since_epoch().count();
-            return splitmix64((int)x + FIXED_RANDOM);
-        }*/
-
         size_t operator()(std::string x) const {
             static const uint64_t FIXED_RANDOM = std::chrono::steady_clock::now().time_since_epoch().count();
             return splitmix64(std::hash<std::string>()(x) + FIXED_RANDOM);
@@ -42,6 +38,7 @@ private:
     std::unordered_map<std::string, int, custom_hash> tk_type;
     std::unordered_map<std::string, int, custom_hash> hash_by_word;
     std::unordered_map<int, std::string, custom_hash> hash_by_value;
+    std::unordered_set<std::string, custom_hash> reserved_words;
 
     std::vector<bool> terminal_states;
     std::vector<std::string> tk_types;
@@ -51,17 +48,15 @@ private:
     int state = 1, pos = 0, line = 0, ids = 0;
 public:
     lexer(std::string const& filename);
+    void add_reserved_words();
     void give_adjacence();
+    void read_file(std::string const& filename);
     std::string analyse_str(std::string const& str, bool& comented);
+    char next_char();
     token next_token();
-    bool is_digit(char const& c);
-    bool is_point(char const& c);
-    bool is_char(char const& c);
-    bool is_operator(char const& c);
     bool is_space(char const& c);
     bool is_eof();
-    char next_char();
-    void backtrack();
+    void backtrack(std::string &ans);
     void printerrors(std::ostream& os);
 };
 

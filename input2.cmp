@@ -1,8 +1,11 @@
 //comentário 1
-alou == 13+14$
-oi   teste
+alou == 13.+14$;
+beterraba = abacate + (banana - maca);
+oi   teste();
 /*comentário 2*/
-alou 5
+alou 5;
+
+int trem = 40 + 1;
                       
-aaaabbb
+aaaabbb;
 
