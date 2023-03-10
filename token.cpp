@@ -36,6 +36,9 @@ std::pair<int, int> token::get_pos() {
     return pos;
 }
 
-std::ostream& token::operator<<(std::ostream& os) const {
-    return os << "type: [" << type << "] text: [" << text << "]\n";
+//Operador para imprimir o token
+std::ostream& operator<<(std::ostream& os, token& tk) {
+    auto [x, y] = tk.get_pos();
+    std::string t = tk.get_type(), tx = tk.get_text();
+    return os << "[" << t << ", " << tx << ", " << x << ", " << y << "]";
 }
