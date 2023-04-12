@@ -42,12 +42,12 @@ lexer::lexer(std::string const& filename) {
 void lexer::add_reserved_words() {
     reserved_words.insert("int");
     reserved_words.insert("float");
-    reserved_words.insert("char");
+//    reserved_words.insert("char");
     reserved_words.insert("string");
     reserved_words.insert("if");
     reserved_words.insert("else");
     reserved_words.insert("while");
-    reserved_words.insert("def");
+//    reserved_words.insert("def");
     reserved_words.insert("main");
     reserved_words.insert("read");
     reserved_words.insert("print");
@@ -229,11 +229,10 @@ token lexer::next_token() {
             }
             else {
                 if (!hash_by_word.count(ans)) { //Adiciona palavra na hash
-                    hash_by_word[ans] = ids;
-                    hash_by_value[ids] = ans;
-                    ids++;
+                    hash_by_word[ans] = (int)hash_by_word.size();
+                    hash_by_value[(int)hash_by_value.size()] = ans;
                 }
-                tk = token("Identifier", std::to_string(hash_by_word[ans]), { line, pos });
+                tk = token("id", std::to_string(hash_by_word[ans]), { line, pos });
             }
             break;
         //Estado 5(Numero)
@@ -249,7 +248,7 @@ token lexer::next_token() {
         //Estado 9 (Operador matematico)
         case 9:
             backtrack(ans);
-            tk = token("MOperator", MOperators[ans], { line, pos });
+            tk = token("opM", MOperators[ans], { line, pos });
             break;
         //Estado 12 (Exprecao de atribuicao)
         case 12:
@@ -259,7 +258,7 @@ token lexer::next_token() {
         //Estado 15 (Operador de relacao)
         case 15:
             backtrack(ans);
-            tk = token("op_rel", LOperators[ans], { line, pos });
+            tk = token("opL", LOperators[ans], { line, pos });
             break;
         //Estado 18 (Frase)
         case 18:

@@ -16,5 +16,5 @@ public:
     std::string get_type();
     std::string get_text();
     std::pair<int, int> get_pos();
-   friend std::ostream& operator<<(std::ostream& os, token& tk);
+    friend std::ostream& operator<<(std::ostream& os, token& tk);
 };
