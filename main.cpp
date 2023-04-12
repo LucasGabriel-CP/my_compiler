@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
     std::ofstream outFile("output.txt");
     while (tk.get_type() != "NULL") {
         if (tk.get_type() != "ERROR") {
-            outFile << tk << " \n"[tk.get_type() == ";"];
+            outFile << tk << " \n"[tk.get_type() == ";"];adasdasd
         }
         tk = lx.next_token();
     }
