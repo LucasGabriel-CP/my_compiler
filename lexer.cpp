@@ -23,16 +23,6 @@ lexer::lexer(std::string const& filename) {
         {"<=", "less_equal"}
     };
 
-    tk_type = {
-        {"Identifier", 0},
-        {"INumber", 1},
-        {"FNumber", 2},
-        {"MOperator", 3},
-        {"LOperator", 4},
-        {"Reserved", 5},
-        {"Ponctuation", 6}
-    };
-
     add_reserved_words();
     give_adjacence();
     read_file(filename);

@@ -15,4 +15,4 @@ token.o: token.h
 lexer.o: lexer.h token.h
 
 clean:
-	del /Q /F *.o
+	del /Q /F *.o null
