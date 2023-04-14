@@ -14,7 +14,15 @@
 
 class lexer{
 private:
+    //Demais variaveis
+    std::vector<bool> terminal_states;
+    std::vector<std::string> tk_types;
+    std::vector<std::unordered_map<char, int>> state_matrix;
+    std::vector<std::string> content;
+    std::vector<std::tuple<int, int, char>> errors;
+    int state = 1, pos = 0, line = 0, ids = 0;
 
+public:
     //Funcao hash
     struct custom_hash {
         static uint64_t splitmix64(uint64_t x) {
@@ -41,17 +49,8 @@ private:
     std::unordered_map<std::string, int, custom_hash> hash_by_word;
     std::unordered_map<int, std::string, custom_hash> hash_by_value;
     std::unordered_set<std::string, custom_hash> reserved_words;
-
-    //Demais variaveis
-    std::vector<bool> terminal_states;
-    std::vector<std::string> tk_types;
-    std::vector<std::unordered_map<char, int>> state_matrix;
-    std::vector<std::string> content;
-    std::vector<std::tuple<int, int, char>> errors;
-    int state = 1, pos = 0, line = 0, ids = 0;
-
-public:
     //Metodos do analisador lexico
+    lexer();
     lexer(std::string const& filename);
     void add_reserved_words();
     void give_adjacence();
@@ -64,4 +63,3 @@ public:
     void backtrack(std::string &ans);
     void printerrors(std::ostream& os);
 };
-
