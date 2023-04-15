@@ -1,11 +1,5 @@
-//comentário 1
-alou == 13.+1$4;
-beterraba = abacate + (banana - maca);
-oi   teste();
-/*comentário 2*/
-alou 5;
-
-int trem=40+1 ;
-                      
-aaaabbb;
-
+int, a, b;
+a = 15;
+b = 13;
+if (a == b) { print('oi'); }
+else { print('tchau'); }

@@ -5,6 +5,7 @@ Construtor
 Parametros:
     filename -> Nome do arquivo com o programa fonte
 */
+lexer::lexer(){ }
 lexer::lexer(std::string const& filename) {
     MOperators = {
         {"+", "add"},
@@ -71,12 +72,14 @@ void lexer::give_adjacence() {
     for (char i = 'a'; i <= 'z'; i++) {
         state_matrix[1][i] = state_matrix[1][(int)i - 32] = 2;
         state_matrix[2][i] = state_matrix[2][(int)i - 32] = 2;
+        state_matrix[16][i] = 16;
     }
 
     for (char i = '0'; i <= '9'; i++) {
         state_matrix[1][i] = state_matrix[4][i] = 4;
         state_matrix[2][i] = 2;
         state_matrix[6][i] = 6;
+        state_matrix[16][i] = 16;
     }
     state_matrix[4]['.'] = 6;
     
@@ -84,10 +87,18 @@ void lexer::give_adjacence() {
     state_matrix[1]['/'] = state_matrix[1]['*'] = 8;
     state_matrix[1]['%'] = state_matrix[1]['^'] = 8;
 
+    state_matrix[16]['-'] = state_matrix[16]['+'] = 16;
+    state_matrix[16]['/'] = state_matrix[16]['*'] = 16;
+    state_matrix[16]['%'] = state_matrix[16]['^'] = 16;
+
     //state_matrix[1].push_back(9); plus assign
     state_matrix[1]['='] = 11;
     state_matrix[1]['<'] = state_matrix[1]['>'] = state_matrix[1]['!'] = 14;
     state_matrix[11]['='] = state_matrix[14]['='] = 13;
+
+    state_matrix[16]['='] = 11;
+    state_matrix[16]['<'] = state_matrix[16]['>'] = state_matrix[16]['!'] = 16;
+    state_matrix[16]['='] = state_matrix[16]['='] = 16;
 
     state_matrix[1][(char)39] = 16;
     state_matrix[16][(char)39] = 17;
@@ -243,7 +254,7 @@ token lexer::next_token() {
         //Estado 12 (Exprecao de atribuicao)
         case 12:
             backtrack(ans);
-            tk = token("exp_atri", ans, { line, pos });
+            tk = token("=", ans, { line, pos });
             break;
         //Estado 15 (Operador de relacao)
         case 15:
@@ -252,6 +263,7 @@ token lexer::next_token() {
             break;
         //Estado 18 (Frase)
         case 18:
+            backtrack(ans);
             tk = token("Frase", ans, { line, pos });
             break;
         //Estado 19 (Chaves/Parenteses)

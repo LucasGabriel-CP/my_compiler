@@ -6,6 +6,7 @@ data: 02/03/2023
 #include <bits/stdc++.h>
 #include "lexer.h"
 #include "token.h"
+#include "parser.h"
 
 //Definir estado random
 std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
@@ -19,10 +20,12 @@ int main(int argc, char* argv[]) {
     */
     lexer lx(str);
     
+    std::vector<token> tokens;
     //Analisar lexemas
     token tk = lx.next_token();
     std::ofstream outFile("output.txt");
     while (tk.get_type() != "NULL") {
+        tokens.push_back(tk);
         if (tk.get_type() != "ERROR") {
             outFile << tk << " \n"[tk.get_type() == ";"];
         }
@@ -30,10 +33,17 @@ int main(int argc, char* argv[]) {
     }
     
     //Printar erros
-    outFile << std::setfill('-') << std::setw(80) << '\n';
+    outFile << '\n' << std::setfill('-') << std::setw(80) << '\n';
     lx.printerrors(outFile);
-    std::cout << "Arquivo analisado!(Tecle ENTER)\n";
+    outFile.close();
+    std::cout << "Tokens gerados!(Tecle ENTER)\n";
     system("pause > null");
+    outFile = std::ofstream("output2.txt");
+    parser pr(tokens);
+    pr.work(outFile);
+    std::cout << "Analise feita!(Tecle ENTER)\n";
+    system("pause > null");
+
 
     return 0;
 }

@@ -10,8 +10,8 @@
 #include<chrono>
 #include<random>
 #include<stack>
-#include "token.h"
-#include "lexer.h"
+#include"lexer.h"
+#include"token.h"
 
 class parser : public lexer{
 private:
@@ -35,12 +35,12 @@ private:
     };*/
     std::unordered_map<std::string,
             std::unordered_map<std::string, std::vector<std::string>, custom_hash>, custom_hash> predictive_table;
-    std::unordered_map<std::string, int, custom_hash> hash_by_word;
-    std::unordered_map<int, std::string, custom_hash> hash_by_value;
+    //std::unordered_map<std::string, int, custom_hash> hash_by_word;
+    //std::unordered_map<int, std::string, custom_hash> hash_by_value;
     std::vector<std::pair<std::string, std::string>> symbol_table;
     std::vector<token> tokens;
 public:
     parser();
-    parser(std::unordered_map<std::string, int, custom_hash> h1, std::unordered_map<int, std::string, custom_hash> h2, std::vector<token> const &tokens);
-	void work();
+    parser(std::vector<token> const &tokens);
+	void work(std::ofstream &outFile);
 };
