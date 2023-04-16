@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <utility>
-#include<string>
+#include <string>
 
 class token{
 private:

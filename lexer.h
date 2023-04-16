@@ -47,7 +47,6 @@ public:
     std::unordered_map<std::string, std::string, custom_hash> LOperators;
     std::unordered_map<std::string, int, custom_hash> tk_type;
     std::unordered_map<std::string, int, custom_hash> hash_by_word;
-    std::unordered_map<int, std::string, custom_hash> hash_by_value;
     std::unordered_set<std::string, custom_hash> reserved_words;
     //Metodos do analisador lexico
     lexer();

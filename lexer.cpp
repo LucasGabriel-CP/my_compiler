@@ -231,7 +231,6 @@ token lexer::next_token() {
             else {
                 if (!hash_by_word.count(ans)) { //Adiciona palavra na hash
                     hash_by_word[ans] = (int)hash_by_word.size();
-                    hash_by_value[(int)hash_by_value.size()] = ans;
                 }
                 tk = token("id", std::to_string(hash_by_word[ans]), { line, pos });
             }

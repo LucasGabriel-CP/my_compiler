@@ -17,4 +17,5 @@ lexer.o: lexer.h token.h
 parser.o: parser.h lexer.h token.h
 
 clean:
-	del /Q /F *.o null
+	del /Q /F *.o
+	del /Q /F null

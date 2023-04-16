@@ -1,17 +1,26 @@
 #include "token.h"
 
+//construtor padrao
 token::token() {
     pos = { -1, -1 };
     type = "NULL";
     text = "NULL";
 }
 
+/*
+Construtor do token
+Parametros:
+    type_: tipo do token
+    text_: padrao do token
+    pos:   posicao no arquivo
+*/
 token::token(std::string const& type_, std::string const& text_, std::pair<int, int> const& pos_) {
     type = type_;
     text = text_;
     pos = pos_;
 }
 
+//Getters e setters da classe
 void token::set_type(std::string const& type_) {
     type = type_;
 }

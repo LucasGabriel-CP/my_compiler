@@ -1,6 +1,6 @@
 /*
 autor: Lucas Gabriel de Godoi Arriel
-data: 02/03/2023
+data inicial: 02/03/2023
 */
 //Import das bibliotecas
 #include <bits/stdc++.h>
@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
     std::vector<token> tokens;
     //Analisar lexemas
     token tk = lx.next_token();
-    std::ofstream outFile("output.txt");
+    std::ofstream outFile("output_lexer.txt");
     while (tk.get_type() != "NULL") {
         tokens.push_back(tk);
         if (tk.get_type() != "ERROR") {
@@ -33,12 +33,13 @@ int main(int argc, char* argv[]) {
     }
     
     //Printar erros
+    
     outFile << '\n' << std::setfill('-') << std::setw(80) << '\n';
     lx.printerrors(outFile);
     outFile.close();
     std::cout << "Tokens gerados!(Tecle ENTER)\n";
     system("pause > null");
-    outFile = std::ofstream("output2.txt");
+    outFile = std::ofstream("output_parser.txt");
     parser pr(tokens);
     pr.work(outFile);
     std::cout << "Analise feita!(Tecle ENTER)\n";

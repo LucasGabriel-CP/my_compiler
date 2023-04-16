@@ -1,5 +1,8 @@
-int, a, b;
+int a, b;
 a = 15;
 b = 13;
 if (a == b) { print('oi'); }
 else { print('tchau'); }
+while (a < b){
+	a = a + b;
+}
