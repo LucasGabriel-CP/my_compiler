@@ -32,19 +32,18 @@ int main(int argc, char* argv[]) {
         tk = lx.next_token();
     }
     
-    //Printar erros
-    
     outFile << '\n' << std::setfill('-') << std::setw(80) << '\n';
     lx.printerrors(outFile);
     outFile.close();
     std::cout << "Tokens gerados!(Tecle ENTER)\n";
     system("pause > null");
+    
     outFile = std::ofstream("output_parser.txt");
     parser pr(tokens);
     pr.work(outFile);
     std::cout << "Analise feita!(Tecle ENTER)\n";
     system("pause > null");
-
+    outFile.close();
 
     return 0;
 }
