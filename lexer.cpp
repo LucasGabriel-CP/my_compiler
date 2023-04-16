@@ -67,19 +67,21 @@ void lexer::give_adjacence() {
     state_matrix[11]['$'] = 12;
     state_matrix[13]['$'] = 15;
     state_matrix[14]['$'] = 15;
+    state_matrix[16]['$'] = 16;
     state_matrix[17]['$'] = 18;
 
     for (char i = 'a'; i <= 'z'; i++) {
         state_matrix[1][i] = state_matrix[1][(int)i - 32] = 2;
         state_matrix[2][i] = state_matrix[2][(int)i - 32] = 2;
-        state_matrix[16][i] = 16;
     }
 
     for (char i = '0'; i <= '9'; i++) {
         state_matrix[1][i] = state_matrix[4][i] = 4;
-        state_matrix[2][i] = 2;
+        for (char j = 'a'; j <= 'z'; j++) {
+            state_matrix[4][j] = state_matrix[4][(int)j - 32] = 0;
+            state_matrix[6][j] = state_matrix[6][(int)j - 32] = 0;
+        }
         state_matrix[6][i] = 6;
-        state_matrix[16][i] = 16;
     }
     state_matrix[4]['.'] = 6;
     
@@ -87,18 +89,10 @@ void lexer::give_adjacence() {
     state_matrix[1]['/'] = state_matrix[1]['*'] = 8;
     state_matrix[1]['%'] = state_matrix[1]['^'] = 8;
 
-    state_matrix[16]['-'] = state_matrix[16]['+'] = 16;
-    state_matrix[16]['/'] = state_matrix[16]['*'] = 16;
-    state_matrix[16]['%'] = state_matrix[16]['^'] = 16;
-
     //state_matrix[1].push_back(9); plus assign
     state_matrix[1]['='] = 11;
     state_matrix[1]['<'] = state_matrix[1]['>'] = state_matrix[1]['!'] = 14;
     state_matrix[11]['='] = state_matrix[14]['='] = 13;
-
-    state_matrix[16]['='] = 11;
-    state_matrix[16]['<'] = state_matrix[16]['>'] = state_matrix[16]['!'] = 16;
-    state_matrix[16]['='] = state_matrix[16]['='] = 16;
 
     state_matrix[1][(char)39] = 16;
     state_matrix[16][(char)39] = 17;
@@ -119,11 +113,11 @@ void lexer::read_file(std::string const& filename) {
 
     
     std::string aux, str;
-    bool comented = false;
+    bool comented = false, is_str = false;
     //Ler arquivos e imprimir no novo arquivo
     while (std::getline(File, str)) {
         //Analisa a string
-        aux = analyse_str(str, comented);
+        aux = analyse_str(str, comented, is_str);
         if (!aux.empty())   //Se tiver algo adiciona
             content.push_back(aux);
     }
@@ -137,11 +131,17 @@ Função para analisar a string
 Parametros:
     str      -> string para analisar
     comented -> se está dentro de um bloco comentado
+    is_str   -> se está dentro de uma frase
 */
-std::string lexer::analyse_str(std::string const& str, bool& comented) {
+std::string lexer::analyse_str(std::string const& str, bool& comented, bool&is_str) {
     std::string ans = "";                       //Nova string
     int cnt = 0, size_str = (int)str.size();    //Contador de espaços e tamanho da string
     for (int i = 0; i < size_str; i++) {
+        if (is_str) {
+            ans += str[i];
+            is_str = bool(str[i] != (char)39);
+            continue;
+        }
         if (i < size_str - 1) {
             //Se a linha tiver comentada, encerra o loop
             if (str[i] == '/' && str[i + 1] == '/') {
@@ -174,6 +174,7 @@ std::string lexer::analyse_str(std::string const& str, bool& comented) {
         }
         //Se não, adiciona a nova string
         ans += str[i];
+        if (str[i] == (char)39) is_str = true;
     }
     //Se tiver algum conteúdo, insere a quebra de linha
     if (!ans.empty()) {
@@ -184,6 +185,11 @@ std::string lexer::analyse_str(std::string const& str, bool& comented) {
         ans += '\n';
     }
     return ans;
+}
+
+void lexer::add_error(std::string str, token &tk) {
+    errors.push_back({ line, pos, str });
+    tk.set_type("ERROR");
 }
 
 //Funcao para pegar o proximo caracter do arquivo
@@ -213,10 +219,9 @@ token lexer::next_token() {
             state = state_matrix[state]['$'];   //Se nao tiver vai pra erro
         }
         ok &= (bool)((bool)state && !terminal_states[state]);
-
         //Adiciona a string resultante se estiver em um estado maior que 1 ou
         //se nao for espaco no primeiro estado
-        if (state > 1 || state == 1 && !is_space(cur))
+        if (state > 1 || state == 1 && !is_space(cur) || !ok)
             ans += cur;
     }
     
@@ -235,15 +240,25 @@ token lexer::next_token() {
                 tk = token("id", std::to_string(hash_by_word[ans]), { line, pos });
             }
             break;
-        //Estado 5(Numero)
+        //Estado 5(Numero inteiro)
         case 5:
             backtrack(ans);
-            tk = token("INumber", ans, { line, pos });
+            if ((int)ans.size() > 9) {
+                add_error(ans, tk);
+            }
+            else {
+                tk = token("INumber", ans, { line, pos });
+            }
             break;
         //Estado 7 (Numero com Ponto Flutuante)
         case 7:
             backtrack(ans);
-            tk = token("FNumber", ans, { line, pos });
+            if ((int)ans.size() > 9) {
+                add_error(ans, tk);
+            }
+            else {
+                tk = token("FNumber", ans, { line, pos });
+            }
             break;
         //Estado 9 (Operador matematico)
         case 9:
@@ -275,10 +290,10 @@ token lexer::next_token() {
             break;
         }
     }
-    else if (!is_eof() || is_eof() && !is_space(cur)) { //Senao deu ruim
-        errors.push_back({ line, pos, cur });
-        tk.set_type("ERROR");
+    else if (!ans.empty()){ //Senao deu ruim
+        add_error(ans, tk);
     }
+    if (is_eof()) tk.set_type("NULL");
 
     return tk;
 }

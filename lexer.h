@@ -19,7 +19,7 @@ private:
     std::vector<std::string> tk_types;
     std::vector<std::unordered_map<char, int>> state_matrix;
     std::vector<std::string> content;
-    std::vector<std::tuple<int, int, char>> errors;
+    std::vector<std::tuple<int, int, std::string>> errors;
     int state = 1, pos = 0, line = 0, ids = 0;
 
 public:
@@ -48,15 +48,17 @@ public:
     std::unordered_map<std::string, int, custom_hash> tk_type;
     std::unordered_map<std::string, int, custom_hash> hash_by_word;
     std::unordered_set<std::string, custom_hash> reserved_words;
+
     //Metodos do analisador lexico
     lexer();
     lexer(std::string const& filename);
     void add_reserved_words();
     void give_adjacence();
     void read_file(std::string const& filename);
-    std::string analyse_str(std::string const& str, bool& comented);
+    std::string analyse_str(std::string const& str, bool& comented, bool&is_str);
     char next_char();
     token next_token();
+    void add_error(std::string str, token &tk);
     bool is_space(char const& c);
     bool is_eof();
     void backtrack(std::string &ans);
