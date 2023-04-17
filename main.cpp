@@ -3,7 +3,12 @@ autor: Lucas Gabriel de Godoi Arriel
 data inicial: 02/03/2023
 */
 //Import das bibliotecas
-#include <bits/stdc++.h>
+//#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <random>
+#include <chrono>
+#include <fstream>
 #include "lexer.h"
 #include "token.h"
 #include "parser.h"
@@ -18,8 +23,8 @@ int main(int argc, char* argv[]) {
     std::cout << "Digite o nome do Arquivo: ";
     std::cin >> str;
     */
+
     lexer lx(str);
-    
     std::vector<token> tokens;
     //Analisar lexemas
     token tk = lx.next_token();

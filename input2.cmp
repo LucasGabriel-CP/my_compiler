@@ -1,9 +1,1 @@
-int a, B;
-a = '  ';
-b = 13;
-
-if (a == b) { print('oi'); }
-else { print('tchau'); }
-while (a < b){
-	a = a + b;
-}
+a = .

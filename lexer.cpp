@@ -33,13 +33,12 @@ lexer::lexer(std::string const& filename) {
 void lexer::add_reserved_words() {
     reserved_words.insert("int");
     reserved_words.insert("float");
-//    reserved_words.insert("char");
     reserved_words.insert("string");
     reserved_words.insert("if");
     reserved_words.insert("else");
     reserved_words.insert("while");
 //    reserved_words.insert("def");
-    reserved_words.insert("main");
+//    reserved_words.insert("main");
     reserved_words.insert("read");
     reserved_words.insert("print");
 }
@@ -216,7 +215,7 @@ token lexer::next_token() {
             state = state_matrix[state][cur];
         }
         else {
-            state = state_matrix[state]['$'];   //Se nao tiver vai pra erro
+            state = state_matrix[state]['$'];   //Se nao tiver vai pra erro (16 nao tem erro)
         }
         ok &= (bool)((bool)state && !terminal_states[state]);
         //Adiciona a string resultante se estiver em um estado maior que 1 ou
