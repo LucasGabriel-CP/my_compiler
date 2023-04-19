@@ -1,30 +1,96 @@
 <bloco> $ 
-[id, 0, 0, 1]
+[if, if, 0, 2]
 
 <comando> <bloco> $ 
-[id, 0, 0, 1]
+[if, if, 0, 2]
 
-<exp_atrib> <bloco> $ 
-[id, 0, 0, 1]
+<if> <bloco> $ 
+[if, if, 0, 2]
 
-id = <exp> ; <bloco> $ 
-[id, 0, 0, 1]
+if ( <exp> ) { <bloco> } <else> <bloco> $ 
+[if, if, 0, 2]
 
-= <exp> ; <bloco> $ 
-[=, =, 0, 3]
+( <exp> ) { <bloco> } <else> <bloco> $ 
+[(, (, 0, 4]
 
-<exp> ; <bloco> $ 
+<exp> ) { <bloco> } <else> <bloco> $ 
 [ERROR, NULL, -1, -1]
 
-; <bloco> $ 
+) { <bloco> } <else> <bloco> $ 
 [ERROR, NULL, -1, -1]
+
+{ <bloco> } <else> <bloco> $ 
+[id, 0, 0, 7]
+
+<bloco> } <else> <bloco> $ 
+[opL, equal, 0, 10]
+
+} <else> <bloco> $ 
+[opL, equal, 0, 10]
+
+<else> <bloco> $ 
+[id, 1, 0, 12]
 
 <bloco> $ 
-[$, $, -1, -1]
+[id, 1, 0, 12]
+
+<comando> <bloco> $ 
+[id, 1, 0, 12]
+
+<exp_atrib> <bloco> $ 
+[id, 1, 0, 12]
+
+id = <exp> ; <bloco> $ 
+[id, 1, 0, 12]
+
+= <exp> ; <bloco> $ 
+[), ), 0, 13]
+
+<exp> ; <bloco> $ 
+[{, {, 0, 14]
+
+; <bloco> $ 
+[{, {, 0, 14]
+
+<bloco> $ 
+[id, 0, 1, 2]
+
+<comando> <bloco> $ 
+[id, 0, 1, 2]
+
+<exp_atrib> <bloco> $ 
+[id, 0, 1, 2]
+
+id = <exp> ; <bloco> $ 
+[id, 0, 1, 2]
+
+= <exp> ; <bloco> $ 
+[=, =, 1, 3]
+
+<exp> ; <bloco> $ 
+[INumber, 3, 1, 4]
+
+<termo> <exp'> ; <bloco> $ 
+[INumber, 3, 1, 4]
+
+constante <exp'> ; <bloco> $ 
+[INumber, 3, 1, 4]
+
+<exp'> ; <bloco> $ 
+[;, ;, 1, 5]
+
+empty ; <bloco> $ 
+[;, ;, 1, 5]
+
+; <bloco> $ 
+[;, ;, 1, 5]
+
+<bloco> $ 
+[}, }, 2, 1]
 
 empty $ 
-[$, $, -1, -1]
+[}, }, 2, 1]
 
 $ 
-[$, $, -1, -1]
+[}, }, 2, 1]
 
