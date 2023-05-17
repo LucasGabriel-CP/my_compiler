@@ -62,34 +62,82 @@ id = <exp> ; <bloco> } $
 [=, =, 2, 4]
 
 <exp> ; <bloco> } $ 
-[INumber, 1, 2, 6]
+[INumber, 2, 2, 6]
 
 <termo> <exp'> ; <bloco> } $ 
-[INumber, 1, 2, 6]
+[INumber, 2, 2, 6]
 
 constante <exp'> ; <bloco> } $ 
-[INumber, 1, 2, 6]
+[INumber, 2, 2, 6]
 
 <exp'> ; <bloco> } $ 
-[opM, add, 2, 8]
+[opM, mul, 2, 8]
 
 opM <termo> <exp'> ; <bloco> } $ 
-[opM, add, 2, 8]
+[opM, mul, 2, 8]
 
 <termo> <exp'> ; <bloco> } $ 
-[INumber, 2, 2, 10]
+[(, (, 2, 10]
 
-constante <exp'> ; <bloco> } $ 
-[INumber, 2, 2, 10]
+( <exp> ) <exp'> ; <bloco> } $ 
+[(, (, 2, 10]
+
+<exp> ) <exp'> ; <bloco> } $ 
+[INumber, 1, 2, 11]
+
+<termo> <exp'> ) <exp'> ; <bloco> } $ 
+[INumber, 1, 2, 11]
+
+constante <exp'> ) <exp'> ; <bloco> } $ 
+[INumber, 1, 2, 11]
+
+<exp'> ) <exp'> ; <bloco> } $ 
+[opM, add, 2, 13]
+
+opM <termo> <exp'> ) <exp'> ; <bloco> } $ 
+[opM, add, 2, 13]
+
+<termo> <exp'> ) <exp'> ; <bloco> } $ 
+[(, (, 2, 15]
+
+( <exp> ) <exp'> ) <exp'> ; <bloco> } $ 
+[(, (, 2, 15]
+
+<exp> ) <exp'> ) <exp'> ; <bloco> } $ 
+[INumber, 2, 2, 16]
+
+<termo> <exp'> ) <exp'> ) <exp'> ; <bloco> } $ 
+[INumber, 2, 2, 16]
+
+constante <exp'> ) <exp'> ) <exp'> ; <bloco> } $ 
+[INumber, 2, 2, 16]
+
+<exp'> ) <exp'> ) <exp'> ; <bloco> } $ 
+[), ), 2, 17]
+
+empty ) <exp'> ) <exp'> ; <bloco> } $ 
+[), ), 2, 17]
+
+) <exp'> ) <exp'> ; <bloco> } $ 
+[), ), 2, 17]
+
+<exp'> ) <exp'> ; <bloco> } $ 
+[), ), 2, 18]
+
+empty ) <exp'> ; <bloco> } $ 
+[), ), 2, 18]
+
+) <exp'> ; <bloco> } $ 
+[), ), 2, 18]
 
 <exp'> ; <bloco> } $ 
-[;, ;, 2, 11]
+[;, ;, 2, 19]
 
 empty ; <bloco> } $ 
-[;, ;, 2, 11]
+[;, ;, 2, 19]
 
 ; <bloco> } $ 
-[;, ;, 2, 11]
+[;, ;, 2, 19]
 
 <bloco> } $ 
 [read, read, 3, 5]

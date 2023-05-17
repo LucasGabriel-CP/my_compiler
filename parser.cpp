@@ -2,6 +2,10 @@
 
 parser::parser(){ }
 
+void parser::add_prod(std::string row, std::string col, std::vector<std::string> res) {
+	predictive_table[row][col].insert(predictive_table[row][col].end(), res.begin(), res.end());
+}
+
 /*
 Construtor do parser
 Parametros:
@@ -19,8 +23,13 @@ parser::parser(std::vector<token> const& tokens) {
     this->tokens.push_back(token("$", "$", std::pair<int, int>(-1, -1)));
     
 	//Construção da tabela
-    predictive_table["<termo>"] = { { "id", {"id"} }, {"constante", {"constante"}} };
-	predictive_table["<func>"] = { { "def", {"def", "id", "(", "<arg>", ")", "{", "<bloco>", "}"}}, {"$", {"empty"}} };
+
+	predictive_table["<termo>"] = {
+		{ "id", {"id"} }, {"constante", {"constante"}}, {"(", {"(", "<exp>", ")"}}
+	};
+	predictive_table["<func>"] = {
+		{ "def", {"def", "id", "(", "<arg>", ")", "{", "<bloco>", "}"}}, {"$", {"empty"}}
+	};
 	predictive_table["<arg>"] = {
 		{"int", {"int", "id"}}, {"float", {"float", "id"}},
 		{"string", {"string", "id"}}, {")", {"empty"}}
@@ -36,26 +45,49 @@ parser::parser(std::vector<token> const& tokens) {
 		{"print", {"<print>"}}, {"int", {"<decl>"}}, {"float", {"<decl>"}}, {"string", {"<decl>"}},
 		{"return", {"<return_exp>"} }
 	};
-    predictive_table["<while>"] = { {"while", {"while", "(", "<exp>", ")", "{", "<bloco>", "}"}}};
-    predictive_table["<if>"] = { {"if", {"if", "(", "<exp>", ")", "{", "<bloco>", "}", "<else>"}}};
+    predictive_table["<while>"] = {
+		{"while", {"while", "(", "<exp>", ")", "{", "<bloco>", "}"}}
+	};
+    predictive_table["<if>"] = {
+		{"if", {"if", "(", "<exp>", ")", "{", "<bloco>", "}", "<else>"}}
+	};
     predictive_table["<else>"] = {
 		{"while", {"empty"}}, {"if", {"empty"}}, {"read", {"empty"}}, {"print", {"empty"}}, {"}", {"empty"}},
 		{"int", {"empty"}}, {"float", {"empty"}}, {"string", {"empty"}}, {"$", {"empty"}},
         {"else", {"else", "{", "<bloco>", "}"}}
     };
-    predictive_table["<read>"] = { {"read", {"read", "(", "id", "<read'>", ")", ";"}} };
-    predictive_table["<read'>"] = { {")", {"empty"}}, {",", {",", "id", "<read'>"}} };
-    predictive_table["<print>"] = { {"print", {"print", "(", "<termo>", "<print'>", ")", ";"}} };
-    predictive_table["<print'>"] = {{")", {"empty"}}, {",", {",", "<termo>", "<print'>"}} };
+    predictive_table["<read>"] = {
+		{"read", {"read", "(", "id", "<read'>", ")", ";"}}
+	};
+    predictive_table["<read'>"] = {
+		{")", {"empty"}}, {",", {",", "id", "<read'>"}}
+	};
+    predictive_table["<print>"] = {
+		{"print", {"print", "(", "<termo>", "<print'>", ")", ";"}}
+	};
+    predictive_table["<print'>"] = {
+		{")", {"empty"}}, {",", {",", "<termo>", "<print'>"}}
+	};
     predictive_table["<decl>"] = {
 		{"int", {"int", "id", "<decl'>", ";"}}, {"float", {"float", "id", "<decl'>", ";"}},
 		{"string", {"string", "id", "<decl'>", ";"}}
 	};
-    predictive_table["<decl'>"] = { {",", {",", "id", "<decl'>"}}, {";", {"empty"}} };
-    predictive_table["<exp_atrib>"] = { {"id", {"id", "=", "<exp>", ";"}} };
-    predictive_table["<exp>"] = { {"id", {"<termo>", "<exp'>"}}, {"constante", {"<termo>", "<exp'>"}} };
-    predictive_table["<exp'>"] = { {";", {"empty"}}, {"opM", {"opM", "<termo>", "<exp'>"}}, {"opL", {"opL", "<termo>"}} };
-	predictive_table["<return_exp>"] = { {"return", {"return", "<termo>", ";"}} };
+    predictive_table["<decl'>"] = {
+		{",", {",", "id", "<decl'>"}}, {";", {"empty"}}
+	};
+    predictive_table["<exp_atrib>"] = {
+		{"id", {"id", "=", "<exp>", ";"}}
+	};
+    predictive_table["<exp>"] = {
+		{"id", {"<termo>", "<exp'>"}}, {"constante", {"<termo>", "<exp'>"}}, {"(", {"<termo>", "<exp'>"}}
+	};
+    predictive_table["<exp'>"] = {
+		{";", {"empty"}}, {"opM", {"opM", "<termo>", "<exp'>"}},
+		{"opL", {"opL", "<termo>"}}, {")", {"empty"}}
+	};
+	predictive_table["<return_exp>"] = {
+		{"return", {"return", "<termo>", ";"}}
+	};
 }
 
 void parser::exc_error(std::string at, std::string aux, int &id) {
@@ -111,9 +143,6 @@ void parser::work(std::ofstream &outFile){
 		
 		if (at == aux){ //terminal com terminal igual
 			id++;
-			if (at == "$"){
-				continue;
-			}
 		}
 		else if (at[0] != '<'){ //terminal com coisa diferente
 			if (at == "empty") continue;
