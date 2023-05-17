@@ -1,7 +1,6 @@
-int ba = 1;
-if (3ab == b){
-	a=3;
-}
-else{
-	a = b * 2;
+def main ( ){
+	int a;
+	a = 1 + 2;
+	read(a);
+	return 0;
 }

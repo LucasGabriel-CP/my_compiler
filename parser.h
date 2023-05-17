@@ -24,4 +24,5 @@ public:
     parser();
     parser(std::vector<token> const &tokens);
 	void work(std::ofstream &outFile);
+    void exc_error(std::string at, std::string str, int& id);
 };

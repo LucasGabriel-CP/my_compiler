@@ -37,8 +37,8 @@ void lexer::add_reserved_words() {
     reserved_words.insert("if");
     reserved_words.insert("else");
     reserved_words.insert("while");
-//    reserved_words.insert("def");
-//    reserved_words.insert("main");
+    reserved_words.insert("def");
+    reserved_words.insert("return");
     reserved_words.insert("read");
     reserved_words.insert("print");
 }

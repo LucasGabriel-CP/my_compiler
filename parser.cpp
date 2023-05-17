@@ -12,7 +12,7 @@ parser::parser(std::vector<token> const& tokens) {
     symbol_table.resize((int)lexer::hash_by_word.size());
     std::vector<std::string> terminals = { "id", "constante", "while", "if", "else", "read", "print"
                                         ")", "(", "{", "}", ",", ";", "int", "float", "string",
-                                        "=", "opM", "opL", "$" };
+                                        "=", "opM", "opL", "def", "return", "$"};
     
 	//Atribuir os tokens e o simbolo $ no fim
 	this->tokens = tokens;
@@ -20,15 +20,22 @@ parser::parser(std::vector<token> const& tokens) {
     
 	//Construção da tabela
     predictive_table["<termo>"] = { { "id", {"id"} }, {"constante", {"constante"}} };
+	predictive_table["<func>"] = { { "def", {"def", "id", "(", "<arg>", ")", "{", "<bloco>", "}"}}, {"$", {"empty"}} };
+	predictive_table["<arg>"] = {
+		{"int", {"int", "id"}}, {"float", {"float", "id"}},
+		{"string", {"string", "id"}}, {")", {"empty"}}
+	};
     predictive_table["<bloco>"] = {
 		{"id", {"<comando>", "<bloco>"}}, {"while", {"<comando>", "<bloco>"}}, {"if", {"<comando>", "<bloco>"}},
 		{"read", {"<comando>", "<bloco>"}}, {"print", {"<comando>", "<bloco>"}}, {"int", {"<comando>", "<bloco>"}},
-		{"float", {"<comando>", "<bloco>"}}, {"string", {"<comando>", "<bloco>"}}, {"}", {"empty"}}, {"$", {"empty"}}
+		{"float", {"<comando>", "<bloco>"}}, {"string", {"<comando>", "<bloco>"}}, {"}", {"empty"}}, {"$", {"empty"}},
+		{"return", {"<comando>", "<bloco>"}}
     };
-    predictive_table["<comando>"] = {
+	predictive_table["<comando>"] = {
 		{"id", {"<exp_atrib>"}}, {"while", {"<while>"}}, {"if", {"<if>"}}, {"read", {"<read>"}},
-		{"print", {"<print>"}}, {"int", {"<decl>"}}, {"float", {"<decl>"}}, {"string", {"<decl>"}}
-    };
+		{"print", {"<print>"}}, {"int", {"<decl>"}}, {"float", {"<decl>"}}, {"string", {"<decl>"}},
+		{"return", {"<return_exp>"} }
+	};
     predictive_table["<while>"] = { {"while", {"while", "(", "<exp>", ")", "{", "<bloco>", "}"}}};
     predictive_table["<if>"] = { {"if", {"if", "(", "<exp>", ")", "{", "<bloco>", "}", "<else>"}}};
     predictive_table["<else>"] = {
@@ -48,6 +55,31 @@ parser::parser(std::vector<token> const& tokens) {
     predictive_table["<exp_atrib>"] = { {"id", {"id", "=", "<exp>", ";"}} };
     predictive_table["<exp>"] = { {"id", {"<termo>", "<exp'>"}}, {"constante", {"<termo>", "<exp'>"}} };
     predictive_table["<exp'>"] = { {";", {"empty"}}, {"opM", {"opM", "<termo>", "<exp'>"}}, {"opL", {"opL", "<termo>"}} };
+	predictive_table["<return_exp>"] = { {"return", {"return", "<termo>", ";"}} };
+}
+
+void parser::exc_error(std::string at, std::string aux, int &id) {
+	if (at == ")") {
+		std::cout << "Missing )\n";
+	}
+	else if (at == "}") {
+		std::cout << "Missing }\n";
+	}
+	else if (at == "<exp'>" && (aux == "constante" || aux == "id")) {
+		std::cout << "Missing operand\n";
+	}
+	else if (at == "def") {
+		std::cout << "Code outside a function\n";
+	}
+	else {
+		if (at == "$") {
+			std::cout << "Found EOF not expected\n";
+		}
+		else {
+			std::cout << "ERRO!\n";
+		}
+		id++;
+	}
 }
 
 /*
@@ -65,7 +97,7 @@ void parser::work(std::ofstream &outFile){
 	std::stack<std::string> st;
 	//Adicionar o simbolo $ e o simbolo inicial
 	st.push("$");
-	st.push("<bloco>");
+	st.push("<func>");
 	int id = 0;
 	while(!st.empty()){
 		print_stack(st);
@@ -86,14 +118,11 @@ void parser::work(std::ofstream &outFile){
 		else if (at[0] != '<'){ //terminal com coisa diferente
 			if (at == "empty") continue;
 			//erro analise sintatica
-			std::cout << "Missing terminal for " << at << '\n'
-				<< "Current terminal: " << aux << '\n';
-			id++;
+			exc_error(at, aux, id);
 		}
 		else{ //Nao terminal com outra coisa
 			if (predictive_table[at][aux].empty()){ //Se tiver numa celula vazia deu ruim
-				std::cout << at << ' ' << aux << '\n';
-				std::cout << "deu merda na analise\n";
+				exc_error(at, aux, id);
 			}
 			else { //Remover nao terminal da pilha e adicionar a producao formada na pilha
 				for (int i = (int)predictive_table[at][aux].size() - 1; i >= 0; i--) {
