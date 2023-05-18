@@ -34,6 +34,7 @@ parser::parser(std::vector<token> const& tokens) {
 		{"int", {"int", "id"}}, {"float", {"float", "id"}},
 		{"string", {"string", "id"}}, {")", {"empty"}}
 	};
+
     predictive_table["<bloco>"] = {
 		{"id", {"<comando>", "<bloco>"}}, {"while", {"<comando>", "<bloco>"}}, {"if", {"<comando>", "<bloco>"}},
 		{"read", {"<comando>", "<bloco>"}}, {"print", {"<comando>", "<bloco>"}}, {"int", {"<comando>", "<bloco>"}},
