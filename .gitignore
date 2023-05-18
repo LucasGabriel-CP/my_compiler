@@ -10,7 +10,7 @@
 *.userosscache
 *.sln.docstates
 *.exe
-CMPUC_v0*
+CMPUC_v0.*
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
