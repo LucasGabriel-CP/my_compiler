@@ -5,7 +5,7 @@ def id ( <arg> ) { <bloco> } $
 [def, def, 0, 3]
 
 id ( <arg> ) { <bloco> } $ 
-[id, 0, 0, 8]
+[id, main, 0, 8]
 
 ( <arg> ) { <bloco> } $ 
 [(, (, 0, 10]
@@ -35,7 +35,7 @@ int id <decl'> ; <bloco> } $
 [int, int, 1, 4]
 
 id <decl'> ; <bloco> } $ 
-[id, 1, 1, 6]
+[id, a, 1, 6]
 
 <decl'> ; <bloco> } $ 
 [;, ;, 1, 7]
@@ -47,157 +47,79 @@ empty ; <bloco> } $
 [;, ;, 1, 7]
 
 <bloco> } $ 
-[id, 1, 2, 2]
+[id, a, 2, 2]
 
 <comando> <bloco> } $ 
-[id, 1, 2, 2]
+[id, a, 2, 2]
 
 <exp_atrib> <bloco> } $ 
-[id, 1, 2, 2]
+[id, a, 2, 2]
 
 id = <exp> ; <bloco> } $ 
-[id, 1, 2, 2]
+[id, a, 2, 2]
 
 = <exp> ; <bloco> } $ 
 [=, =, 2, 4]
 
 <exp> ; <bloco> } $ 
-[INumber, 2, 2, 6]
+[INumber, 1, 2, 6]
 
 <termo> <exp'> ; <bloco> } $ 
-[INumber, 2, 2, 6]
+[INumber, 1, 2, 6]
 
 constante <exp'> ; <bloco> } $ 
-[INumber, 2, 2, 6]
+[INumber, 1, 2, 6]
 
 <exp'> ; <bloco> } $ 
-[opM, mul, 2, 8]
+[opM, add, 2, 8]
 
 opM <termo> <exp'> ; <bloco> } $ 
-[opM, mul, 2, 8]
+[opM, add, 2, 8]
 
 <termo> <exp'> ; <bloco> } $ 
-[(, (, 2, 10]
+[INumber, 2, 2, 10]
 
-( <exp> ) <exp'> ; <bloco> } $ 
-[(, (, 2, 10]
-
-<exp> ) <exp'> ; <bloco> } $ 
-[INumber, 1, 2, 11]
-
-<termo> <exp'> ) <exp'> ; <bloco> } $ 
-[INumber, 1, 2, 11]
-
-constante <exp'> ) <exp'> ; <bloco> } $ 
-[INumber, 1, 2, 11]
-
-<exp'> ) <exp'> ; <bloco> } $ 
-[opM, add, 2, 13]
-
-opM <termo> <exp'> ) <exp'> ; <bloco> } $ 
-[opM, add, 2, 13]
-
-<termo> <exp'> ) <exp'> ; <bloco> } $ 
-[(, (, 2, 15]
-
-( <exp> ) <exp'> ) <exp'> ; <bloco> } $ 
-[(, (, 2, 15]
-
-<exp> ) <exp'> ) <exp'> ; <bloco> } $ 
-[INumber, 2, 2, 16]
-
-<termo> <exp'> ) <exp'> ) <exp'> ; <bloco> } $ 
-[INumber, 2, 2, 16]
-
-constante <exp'> ) <exp'> ) <exp'> ; <bloco> } $ 
-[INumber, 2, 2, 16]
-
-<exp'> ) <exp'> ) <exp'> ; <bloco> } $ 
-[), ), 2, 17]
-
-empty ) <exp'> ) <exp'> ; <bloco> } $ 
-[), ), 2, 17]
-
-) <exp'> ) <exp'> ; <bloco> } $ 
-[), ), 2, 17]
-
-<exp'> ) <exp'> ; <bloco> } $ 
-[), ), 2, 18]
-
-empty ) <exp'> ; <bloco> } $ 
-[), ), 2, 18]
-
-) <exp'> ; <bloco> } $ 
-[), ), 2, 18]
+constante <exp'> ; <bloco> } $ 
+[INumber, 2, 2, 10]
 
 <exp'> ; <bloco> } $ 
-[;, ;, 2, 19]
+[;, ;, 2, 11]
 
 empty ; <bloco> } $ 
-[;, ;, 2, 19]
+[;, ;, 2, 11]
 
 ; <bloco> } $ 
-[;, ;, 2, 19]
+[;, ;, 2, 11]
 
 <bloco> } $ 
-[read, read, 3, 5]
+[return, return, 3, 7]
 
 <comando> <bloco> } $ 
-[read, read, 3, 5]
-
-<read> <bloco> } $ 
-[read, read, 3, 5]
-
-read ( id <read'> ) ; <bloco> } $ 
-[read, read, 3, 5]
-
-( id <read'> ) ; <bloco> } $ 
-[(, (, 3, 6]
-
-id <read'> ) ; <bloco> } $ 
-[id, 1, 3, 7]
-
-<read'> ) ; <bloco> } $ 
-[), ), 3, 8]
-
-empty ) ; <bloco> } $ 
-[), ), 3, 8]
-
-) ; <bloco> } $ 
-[), ), 3, 8]
-
-; <bloco> } $ 
-[;, ;, 3, 9]
-
-<bloco> } $ 
-[return, return, 4, 7]
-
-<comando> <bloco> } $ 
-[return, return, 4, 7]
+[return, return, 3, 7]
 
 <return_exp> <bloco> } $ 
-[return, return, 4, 7]
+[return, return, 3, 7]
 
 return <termo> ; <bloco> } $ 
-[return, return, 4, 7]
+[return, return, 3, 7]
 
 <termo> ; <bloco> } $ 
-[INumber, 0, 4, 9]
+[INumber, 0, 3, 9]
 
 constante ; <bloco> } $ 
-[INumber, 0, 4, 9]
+[INumber, 0, 3, 9]
 
 ; <bloco> } $ 
-[;, ;, 4, 10]
+[;, ;, 3, 10]
 
 <bloco> } $ 
-[}, }, 5, 1]
+[}, }, 4, 1]
 
 empty } $ 
-[}, }, 5, 1]
+[}, }, 4, 1]
 
 } $ 
-[}, }, 5, 1]
+[}, }, 4, 1]
 
 $ 
 [$, $, -1, -1]

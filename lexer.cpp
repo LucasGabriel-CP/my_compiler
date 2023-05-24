@@ -41,6 +41,7 @@ void lexer::add_reserved_words() {
     reserved_words.insert("return");
     reserved_words.insert("read");
     reserved_words.insert("print");
+    reserved_words.insert("call");
 }
 
 //Funcao para adicionar transicoes
@@ -233,10 +234,7 @@ token lexer::next_token() {
                 tk = token(ans, ans, { line, pos });
             }
             else {
-                if (!hash_by_word.count(ans)) { //Adiciona palavra na hash
-                    hash_by_word[ans] = (int)hash_by_word.size();
-                }
-                tk = token("id", std::to_string(hash_by_word[ans]), { line, pos });
+                tk = token("id", ans, { line, pos });
             }
             break;
         //Estado 5(Numero inteiro)
@@ -341,7 +339,7 @@ void lexer::printerrors(std::ostream& os) {
     if (errors.empty()) {
         os << "Any errors/warnings\n"; return;
     }
-    os << "Errors/Warnings:\n";
+    os << "Lexical Errors/Warnings:\n";
     for (auto &[li, col, cara] : errors) {
         os << "Linha: " << li << std::setw(12)
            << "Coluna: " << col << std::setfill('.') << std::setw(7)

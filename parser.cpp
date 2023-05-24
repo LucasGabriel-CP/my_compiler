@@ -13,10 +13,9 @@ Parametros:
 */
 parser::parser(std::vector<token> const& tokens) {
 	//Uso futuro
-    symbol_table.resize((int)lexer::hash_by_word.size());
-    std::vector<std::string> terminals = { "id", "constante", "while", "if", "else", "read", "print"
-                                        ")", "(", "{", "}", ",", ";", "int", "float", "string",
-                                        "=", "opM", "opL", "def", "return", "$"};
+    terminals = { "id", "constante", "while", "if", "else", "read", "print"
+					")", "(", "{", "}", ",", ";", "int", "float", "string",
+					"=", "opM", "opL", "def", "return", "$"};
     
 	//Atribuir os tokens e o simbolo $ no fim
 	this->tokens = tokens;
@@ -91,25 +90,26 @@ parser::parser(std::vector<token> const& tokens) {
 	};
 }
 
-void parser::exc_error(std::string at, std::string aux, int &id) {
+void parser::exc_error(std::string at, std::string aux, std::pair<int, int> posi, int &id) {
+	auto [line, col] = posi;
 	if (at == ")") {
-		std::cout << "Missing )\n";
+		errors.push_back({ line, col, "Missing (" });
 	}
 	else if (at == "}") {
-		std::cout << "Missing }\n";
+		errors.push_back({ line, col, "Missing {" });
 	}
 	else if (at == "<exp'>" && (aux == "constante" || aux == "id")) {
-		std::cout << "Missing operand\n";
+		errors.push_back({ line, col, "Missing operand" });
 	}
 	else if (at == "def") {
-		std::cout << "Code outside a function\n";
+		errors.push_back({ line, col, "Code outside a function" });
 	}
 	else {
 		if (at == "$") {
-			std::cout << "Found EOF not expected\n";
+			errors.push_back({ line, col, "Found EOF not expected" });
 		}
 		else {
-			std::cout << "ERRO!\n";
+			errors.push_back({ line, col, "ERRO!" });
 		}
 		id++;
 	}
@@ -120,7 +120,8 @@ Analisador sintatico (futuramente com o semantico)
 Parametros:
 	Arquivo de saida do analisador sintatico
 */
-void parser::work(std::ofstream &outFile){
+SyntaxTree parser::work(std::ofstream &outFile, HashMatrix& symbol_table,
+						std::unordered_map<std::string, std::vector<std::string>, lexer::custom_hash>& funcs) {
 	//Funcao lambda pra printar a pilha do analisador
 	auto print_stack = [&](std::stack<std::string> s) {
 		for (; !s.empty(); s.pop()) outFile << s.top() << ' ';
@@ -131,8 +132,21 @@ void parser::work(std::ofstream &outFile){
 	//Adicionar o simbolo $ e o simbolo inicial
 	st.push("$");
 	st.push("<func>");
+	
+	Node* p = new Node("$", "global");
+	AST.add_node(p);
+	Node* tree_node = AST.get_root();
+	p = new Node("<func>", "global", tree_node);
+	tree_node->add_child(p);
+
+	//auto add_node = [&]() {
+
+	//};
+	
 	int id = 0;
-	while(!st.empty()){
+	bool inside_decl = false, function_decl = false, function_type = false;
+	std::string decl_type = "none", func_name = "none";
+	while(!st.empty()) {
 		print_stack(st);
 		outFile << tokens[id] << "\n\n";
 		//Pegar o topo da pilha e simbolo para analisar
@@ -142,23 +156,104 @@ void parser::work(std::ofstream &outFile){
 			aux = "constante";
 		}
 		
-		if (at == aux){ //terminal com terminal igual
+		if (at == aux) { //terminal com terminal igual
+			if (aux == "constante") {
+				if (tokens[id].get_type() == "FNumber") {
+					aux = "float";
+				}
+				else if (tokens[id].get_type() == "INumber") {
+					aux = "int";
+				}
+				else {
+					aux = "string";
+				}
+			}
+			/*else if (aux == "id") {
+				aux = tokens[id].get_text();
+			}
+			if (aux == "opM") {
+				aux = tokens[id].get_text();
+			}
+			(tree_node->children[tree_node->id_child])->set_valor(aux);
+			(tree_node->children[tree_node->id_child++])->set_escopo("global");
+
+			if (tree_node->id_child == (int)tree_node->children.size())
+				tree_node = tree_node->get_parent();*/
+			if (inside_decl && aux != ",") {
+				if (aux == ";") {
+					inside_decl = false;
+				}
+				else {
+					if (aux != "id") {
+						decl_type = tokens[id].get_text();
+					}
+					else {
+						std::string id_name = tokens[id].get_text(),
+								posi = "line " + std::to_string(tokens[id].get_pos().second) + " col " + std::to_string(tokens[id].get_pos().first);
+						if (symbol_table["global"].find(id_name) != symbol_table["global"].end()) {
+							std::cout << "Variavel ja declarada: " << symbol_table["global"][id_name][1] << '\n';
+						}
+						else {
+							symbol_table["global"][id_name] = { decl_type, posi };
+						}
+					}
+				}
+			}
+			else if (aux == "def") {
+				function_decl = true;
+			}
+			else if (function_decl) {
+				std::string id_name = tokens[id].get_text(),
+					posi = "line " + std::to_string(tokens[id].get_pos().second) + " col " + std::to_string(tokens[id].get_pos().first);
+				if (funcs.find(id_name) != funcs.end()) {
+					std::cout << "Funcao ja declarada: " << symbol_table["global"][id_name][1] << '\n';
+				}
+				else {
+					funcs[id_name] = { "none", posi};
+				}
+				func_name = id_name;
+				function_decl = false;
+			}
+			else if (aux == "return") {
+				function_type = true;
+			}
+			else if (function_type) {
+				if (aux == "id") {
+					funcs[func_name][0] = symbol_table["global"][tokens[id].get_text()][0];
+				}
+				else {
+					funcs[func_name][0] = aux;
+				}
+				function_type = false;
+			}
+			else if (aux == "id" && symbol_table["global"].find(tokens[id].get_text()) == symbol_table["global"].end()) {
+				std::cout << "Variavel nao declarada!!\n";
+			}
 			id++;
 		}
-		else if (at[0] != '<'){ //terminal com coisa diferente
+		else if (at[0] != '<') { //terminal com coisa diferente
 			if (at == "empty") continue;
 			//erro analise sintatica
-			exc_error(at, aux, id);
+			exc_error(at, aux, tokens[id].get_pos(), id);
 		}
 		else{ //Nao terminal com outra coisa
 			if (predictive_table[at][aux].empty()){ //Se tiver numa celula vazia deu ruim
-				exc_error(at, aux, id);
+				exc_error(at, aux, tokens[id].get_pos(), id);
 			}
 			else { //Remover nao terminal da pilha e adicionar a producao formada na pilha
-				for (int i = (int)predictive_table[at][aux].size() - 1; i >= 0; i--) {
+				//tree_node = tree_node->children[tree_node->id_child++];
+				if (at == "<decl>") {
+					inside_decl = true;
+				}
+				int sz = (int)predictive_table[at][aux].size() - 1;
+				for (int i = sz; i >= 0; i--) {
 					st.push(predictive_table[at][aux][i]);
+					//Node* cria = new Node(predictive_table[at][aux][sz - i], "global", tree_node);
+					//tree_node->add_child(cria);
 				}
 			}
 		}
 	}
+
+	return AST;
 }

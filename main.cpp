@@ -12,9 +12,14 @@ data inicial: 02/03/2023
 #include "lexer.h"
 #include "token.h"
 #include "parser.h"
+#include "SyntaxTree.h"
 
 //Definir estado random
 std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
+
+using HashMatrix = std::unordered_map<std::string,
+    std::unordered_map<std::string, std::vector<std::string>, lexer::custom_hash>,
+    lexer::custom_hash>;
 
 int main(int argc, char* argv[]) {
     //Ler nome do arquivo
@@ -23,6 +28,9 @@ int main(int argc, char* argv[]) {
     std::cout << "Digite o nome do Arquivo: ";
     std::cin >> str;
     */
+
+    std::unordered_map<std::string, std::vector<std::string>, lexer::custom_hash> funcs;
+    HashMatrix symbol_table;
 
     lexer lx(str);
     std::vector<token> tokens;
@@ -45,8 +53,9 @@ int main(int argc, char* argv[]) {
     
     outFile = std::ofstream("output_parser.txt");
     parser pr(tokens);
-    pr.work(outFile);
-    std::cout << "Analise feita!(Tecle ENTER)\n";
+    SyntaxTree AST;
+    AST = pr.work(outFile, symbol_table, funcs);
+    std::cout << "Analise sintatica feita!(Tecle ENTER)\n";
     system("pause > null");
     outFile.close();
 

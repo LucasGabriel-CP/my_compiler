@@ -133,14 +133,16 @@
   <ItemGroup>
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Node.cpp" />
     <ClCompile Include="parser.cpp" />
+    <ClCompile Include="SyntaxTree.cpp" />
     <ClCompile Include="token.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="exeptions.h" />
-    <ClInclude Include="Interface.h" />
     <ClInclude Include="lexer.h" />
+    <ClInclude Include="Node.h" />
     <ClInclude Include="parser.h" />
+    <ClInclude Include="SyntaxTree.h" />
     <ClInclude Include="token.h" />
   </ItemGroup>
   <ItemGroup>

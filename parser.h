@@ -12,18 +12,23 @@
 #include<stack>
 #include"lexer.h"
 #include"token.h"
+#include"SyntaxTree.h"
+#include"Node.h"
+
+using HashMatrix = std::unordered_map<std::string,
+    std::unordered_map<std::string, std::vector<std::string>, lexer::custom_hash>,
+    lexer::custom_hash>;
 
 class parser : public lexer{
 private:
-    std::unordered_map<std::string,
-            std::unordered_map<std::string, std::vector<std::string>, lexer::custom_hash>,
-        lexer::custom_hash> predictive_table;
-    std::vector<std::pair<std::string, std::string>> symbol_table;
+    HashMatrix predictive_table;
+    std::unordered_set<std::string, lexer::custom_hash> terminals;
     std::vector<token> tokens;
+    SyntaxTree AST;
 public:
     parser();
     parser(std::vector<token> const &tokens);
-	void work(std::ofstream &outFile);
-    void exc_error(std::string at, std::string str, int& id);
+	SyntaxTree work(std::ofstream &e, HashMatrix&, std::unordered_map<std::string, std::vector<std::string>, lexer::custom_hash>&);
+    void exc_error(std::string at, std::string str, std::pair<int, int> posi, int& id);
     void add_prod(std::string row, std::string col, std::vector<std::string> res);
 };

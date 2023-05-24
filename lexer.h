@@ -19,9 +19,9 @@ private:
     std::vector<std::string> tk_types;
     std::vector<std::unordered_map<char, int>> state_matrix;
     std::vector<std::string> content;
-    std::vector<std::tuple<int, int, std::string>> errors;
     int state = 1, pos = 0, line = 0, ids = 0;
-
+protected:
+    std::vector<std::tuple<int, int, std::string>> errors;
 public:
     //Funcao hash
     struct custom_hash {
@@ -46,7 +46,6 @@ public:
     std::unordered_map<std::string, std::string, custom_hash> MOperators;
     std::unordered_map<std::string, std::string, custom_hash> LOperators;
     std::unordered_map<std::string, int, custom_hash> tk_type;
-    std::unordered_map<std::string, int, custom_hash> hash_by_word;
     std::unordered_set<std::string, custom_hash> reserved_words;
 
     //Metodos do analisador lexico
