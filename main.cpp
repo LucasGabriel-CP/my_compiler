@@ -13,13 +13,10 @@ data inicial: 02/03/2023
 #include "token.h"
 #include "parser.h"
 #include "SyntaxTree.h"
+#include "HashMatrix.h"
 
 //Definir estado random
 std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
-
-using HashMatrix = std::unordered_map<std::string,
-    std::unordered_map<std::string, std::vector<std::string>, lexer::custom_hash>,
-    lexer::custom_hash>;
 
 int main(int argc, char* argv[]) {
     //Ler nome do arquivo
@@ -29,7 +26,7 @@ int main(int argc, char* argv[]) {
     std::cin >> str;
     */
 
-    std::unordered_map<std::string, std::vector<std::string>, lexer::custom_hash> funcs;
+    std::unordered_map<std::string, std::vector<std::string>, HashMatrix::custom_hash> funcs;
     HashMatrix symbol_table;
 
     lexer lx(str);

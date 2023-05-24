@@ -14,21 +14,19 @@
 #include"token.h"
 #include"SyntaxTree.h"
 #include"Node.h"
-
-using HashMatrix = std::unordered_map<std::string,
-    std::unordered_map<std::string, std::vector<std::string>, lexer::custom_hash>,
-    lexer::custom_hash>;
+#include "HashMatrix.h"
 
 class parser : public lexer{
 private:
     HashMatrix predictive_table;
-    std::unordered_set<std::string, lexer::custom_hash> terminals;
+    std::unordered_set<std::string, HashMatrix::custom_hash> terminals;
     std::vector<token> tokens;
     SyntaxTree AST;
 public:
     parser();
     parser(std::vector<token> const &tokens);
-	SyntaxTree work(std::ofstream &e, HashMatrix&, std::unordered_map<std::string, std::vector<std::string>, lexer::custom_hash>&);
+	SyntaxTree work(std::ofstream &e, HashMatrix&, std::unordered_map<std::string, std::vector<std::string>, HashMatrix::custom_hash>&);
     void exc_error(std::string at, std::string str, std::pair<int, int> posi, int& id);
+    std::string get_real_type(std::string str);
     void add_prod(std::string row, std::string col, std::vector<std::string> res);
 };
