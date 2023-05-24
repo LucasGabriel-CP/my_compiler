@@ -11,6 +11,8 @@
 *.sln.docstates
 *.exe
 CMPUC_v0.*
+*.vcxproj
+*.vcxproj.filters
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
