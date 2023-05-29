@@ -52,6 +52,7 @@ int main(int argc, char* argv[]) {
     parser pr(tokens);
     SyntaxTree AST;
     AST = pr.work(outFile, symbol_table, funcs);
+    pr.printerrors(outFile);
     std::cout << "Analise sintatica feita!(Tecle ENTER)\n";
     system("pause > null");
     outFile.close();

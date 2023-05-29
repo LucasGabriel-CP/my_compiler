@@ -58,7 +58,7 @@ void lexer::give_adjacence() {
     state_matrix[1]['\t'] = state_matrix[1]['\r'] = 1;
     state_matrix[1]['('] = state_matrix[1][')'] = 19;
     state_matrix[1]['{'] = state_matrix[1]['}'] = 19;
-    state_matrix[1][','] = state_matrix[1][';'] = 20;
+    state_matrix[1][','] = state_matrix[1][';'] = state_matrix[1]['#'] = 20;
     state_matrix[1]['$'] = 0;
     state_matrix[2]['$'] = 3;
     state_matrix[4]['$'] = 5;

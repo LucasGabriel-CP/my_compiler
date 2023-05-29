@@ -3,7 +3,7 @@
 parser::parser(){ }
 
 void parser::add_prod(std::string row, std::string col, std::vector<std::string> res) {
-	predictive_table[row][col].insert(predictive_table[row][col].end(), res.begin(), res.end());
+	//predictive_table[row][col].insert(predictive_table[row][col].end(), res.begin(), res.end());
 }
 
 /*
@@ -23,83 +23,84 @@ parser::parser(std::vector<token> const& tokens) {
     
 	//Construção da tabela
 
-	predictive_table["<termo>"] = {
+	predictive_table.table["<termo>"] = {
 		{ "id", {"id"} }, {"constante", {"constante"}},
 		{"(", {"(", "<exp>", ")"}}, {"#", {"<func_cal>"}}
 	};
-	predictive_table["<func>"] = {
-		{ "def", {"def", "id", "(", "<arg>", ")", "{", "<bloco>", "}"}}, {"$", {"empty"}}
+	predictive_table.table["<func>"] = {
+		{ "def", {"def", "id", "(", "<arg>", ")", "{", "<bloco>", "}", "<func>"}}, {"$", {"empty"}}
 	};
-	predictive_table["<arg>"] = {
+	predictive_table.table["<arg>"] = {
 		{"int", {"int", "id"}}, {"float", {"float", "id"}},
 		{"string", {"string", "id"}}, {")", {"empty"}}
 	};
 
-	predictive_table["<bloco>"] = {
+	predictive_table.table["<bloco>"] = {
 		{"id", {"<comando>", "<bloco>"}}, {"while", {"<comando>", "<bloco>"}}, {"if", {"<comando>", "<bloco>"}},
 		{"read", {"<comando>", "<bloco>"}}, {"print", {"<comando>", "<bloco>"}}, {"int", {"<comando>", "<bloco>"}},
 		{"float", {"<comando>", "<bloco>"}}, {"string", {"<comando>", "<bloco>"}}, {"}", {"empty"}}, {"$", {"empty"}},
 		{"return", {"<comando>", "<bloco>"}}, {"#", {"<comando>", "<bloco>"}}
 	};
-	predictive_table["<comando>"] = {
+	predictive_table.table["<comando>"] = {
 		{"id", {"<exp_atrib>"}}, {"while", {"<while>"}}, {"if", {"<if>"}}, {"read", {"<read>"}},
 		{"print", {"<print>"}}, {"int", {"<decl>"}}, {"float", {"<decl>"}}, {"string", {"<decl>"}},
 		{"return", {"<return_exp>"}}, {"#", {"<exec_func>"}}
 	};
-    predictive_table["<while>"] = {
+    predictive_table.table["<while>"] = {
 		{"while", {"while", "(", "<exp>", ")", "{", "<bloco>", "}"}}
 	};
-    predictive_table["<if>"] = {
+    predictive_table.table["<if>"] = {
 		{"if", {"if", "(", "<exp>", ")", "{", "<bloco>", "}", "<else>"}}
 	};
-	predictive_table["<else>"] = {
+	predictive_table.table["<else>"] = {
 		{"while", {"empty"}}, {"if", {"empty"}}, {"read", {"empty"}}, {"print", {"empty"}}, {"}", {"empty"}},
 		{"int", {"empty"}}, {"float", {"empty"}}, {"string", {"empty"}}, {"$", {"empty"}},
-		{"else", {"else", "{", "<bloco>", "}"}}, {"#", {"empty"}}
+		{"else", {"else", "{", "<bloco>", "}"}}, {"return", {"empty"}}, {"#", {"empty"}}
 	};
-    predictive_table["<read>"] = {
+    predictive_table.table["<read>"] = {
 		{"read", {"read", "(", "id", "<read'>", ")", ";"}}
 	};
-    predictive_table["<read'>"] = {
+    predictive_table.table["<read'>"] = {
 		{")", {"empty"}}, {",", {",", "id", "<read'>"}}
 	};
-    predictive_table["<print>"] = {
+    predictive_table.table["<print>"] = {
 		{"print", {"print", "(", "<termo>", "<print'>", ")", ";"}}
 	};
-    predictive_table["<print'>"] = {
+    predictive_table.table["<print'>"] = {
 		{")", {"empty"}}, {",", {",", "<termo>", "<print'>"}}
 	};
-    predictive_table["<decl>"] = {
+    predictive_table.table["<decl>"] = {
 		{"int", {"int", "id", "<decl'>", ";"}}, {"float", {"float", "id", "<decl'>", ";"}},
 		{"string", {"string", "id", "<decl'>", ";"}}
 	};
-    predictive_table["<decl'>"] = {
+    predictive_table.table["<decl'>"] = {
 		{",", {",", "id", "<decl'>"}}, {";", {"empty"}}
 	};
-    predictive_table["<exp_atrib>"] = {
+    predictive_table.table["<exp_atrib>"] = {
 		{"id", {"id", "=", "<exp>", ";"}}
 	};
-    predictive_table["<exp>"] = {
-		{"id", {"<termo>", "<exp'>"}}, {"constante", {"<termo>", "<exp'>"}}, {"(", {"<termo>", "<exp'>"}}
+    predictive_table.table["<exp>"] = {
+		{"id", {"<termo>", "<exp'>"}}, {"constante", {"<termo>", "<exp'>"}},
+		{"(", {"<termo>", "<exp'>"}}, {"#", {"<termo>", "<exp'>"}}
 	};
-    predictive_table["<exp'>"] = {
+    predictive_table.table["<exp'>"] = {
 		{";", {"empty"}}, {"opM", {"opM", "<termo>", "<exp'>"}},
 		{"opL", {"opL", "<termo>"}}, {")", {"empty"}}
 	};
-	predictive_table["<return_exp>"] = {
+	predictive_table.table["<return_exp>"] = {
 		{"return", {"return", "<termo>", ";"}}
 	};
-	predictive_table["<exec_func>"] = {
+	predictive_table.table["<exec_func>"] = {
 		{"#", {"<func_call>", ";"}}
 	};
-	predictive_table["<func_cal>"] = {
+	predictive_table.table["<func_cal>"] = {
 		{"#", {"#", "id", "(", "<call_args>", ")"}}
 	};
-	predictive_table["<call_args>"] = {
+	predictive_table.table["<call_args>"] = {
 		{"id", {"<termo>", "<call_args'>"}}, {"constante", {"<termo>", "<call_args'>"}},
 		{"(", {"<termo>", "<call_args'>"}}, {")", {"empty"}}
 	};
-	predictive_table["<call_args'>"] = {
+	predictive_table.table["<call_args'>"] = {
 		{",", {"<termo>", "<call_args'>"}}, {")", {"empty"}}
 	};
 
@@ -189,17 +190,6 @@ SyntaxTree parser::work(std::ofstream &outFile, HashMatrix& symbol_table,
 		}
 		
 		if (at == aux) { //terminal com terminal igual
-			/*else if (aux == "id") {
-				aux = tokens[id].get_text();
-			}
-			if (aux == "opM") {
-				aux = tokens[id].get_text();
-			}
-			(tree_node->children[tree_node->id_child])->set_valor(aux);
-			(tree_node->children[tree_node->id_child++])->set_escopo("global");
-
-			if (tree_node->id_child == (int)tree_node->children.size())
-				tree_node = tree_node->get_parent();*/
 			if (inside_decl && aux != ",") {
 				if (aux == ";") {
 					inside_decl = false;
@@ -211,7 +201,8 @@ SyntaxTree parser::work(std::ofstream &outFile, HashMatrix& symbol_table,
 					else {
 						std::string err = symbol_table.add_id(tokens[id].get_text(), "global", func_name, tokens[id].get_pos());
 						if (!err.empty()) {
-							std::cout << err << '\n';
+							auto [x, y] = tokens[id].get_pos();
+							errors.push_back({ x, y, "Variavel ja declarada!!" });
 						}
 					}
 				}
@@ -236,9 +227,21 @@ SyntaxTree parser::work(std::ofstream &outFile, HashMatrix& symbol_table,
 			}
 			else if (function_type) {
 				if (aux == "id") {
-					funcs[func_name][0] = symbol_table.table["global"][tokens[id].get_text()][0];
+					std::string tp = symbol_table.table["global"][tokens[id].get_text()][0];
+					if (tp != "none") {
+						if (funcs[func_name][0] != "none" && tp != funcs[func_name][0]) {
+							auto [x, y] = tokens[id].get_pos();
+							errors.push_back({ x, y, "multiple returning types" });
+						}
+						funcs[func_name][0] = tp;
+					}
 				}
 				else {
+					std::string tp = get_real_type(tokens[id].get_type());
+					if (funcs[func_name][0] != "none" && tp != funcs[func_name][0]) {
+						auto [x, y] = tokens[id].get_pos();
+						errors.push_back({ x, y, "multiple returning types" });
+					}
 					funcs[func_name][0] = get_real_type(tokens[id].get_type());
 				}
 				function_type = false;
@@ -248,7 +251,8 @@ SyntaxTree parser::work(std::ofstream &outFile, HashMatrix& symbol_table,
 					std::string err = symbol_table.add_id(tokens[id].get_text(), decl_type, func_name, tokens[id].get_pos());
 					funcs[func_name].push_back(decl_type);
 					if (!err.empty()) {
-						std::cout << err << '\n';
+						auto [x, y] = tokens[id].get_pos();
+						errors.push_back({ x, y, err });
 					}
 				}
 				else if (at == ")") {
@@ -258,25 +262,11 @@ SyntaxTree parser::work(std::ofstream &outFile, HashMatrix& symbol_table,
 					decl_type = at;
 				}
 			}
-			//else if (function_args) {
-			//	if (at == ")") {
-			//		function_args = 0;
-			//	}
-			//	else if (at != ",") {
-			//		if (at == "id" && !symbol_table.check_decl(tokens[id].get_text(), "global")) {
-			//			std::cout << "Variavel nao declarada!!\n";
-			//		}
-			//		else {
-			//			if (tokens[id].get_type() != funcs[func_name][function_args]) {
-			//				std::cout << "Tipos incopativeis\n";
-			//			}
-			//		}
-			//		function_args++;
-			//	}
-			//}
 			else if (aux == "id") {
-				if (!symbol_table.check_decl(tokens[id].get_text(), "global"))
-					std::cout << "Variavel nao declarada!!\n";
+				if (!symbol_table.check_decl(tokens[id].get_text(), "global") && funcs.find(tokens[id].get_text()) == funcs.end()) {
+					auto [x, y] = tokens[id].get_pos();
+					errors.push_back({ x, y, "Variavel nao declarada!!" });
+				}
 			}
 
 
@@ -299,7 +289,7 @@ SyntaxTree parser::work(std::ofstream &outFile, HashMatrix& symbol_table,
 				if (at == "<decl>") {
 					inside_decl = true;
 				}
-				else if (at == "<args>") {
+				else if (at == "<arg>") {
 					function_decl = true;
 				}
 				//else if (at == "<call_args>") {
