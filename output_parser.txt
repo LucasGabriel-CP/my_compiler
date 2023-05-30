@@ -8,22 +8,22 @@ id ( <arg> ) { <bloco> } <func> $
 [id, fib, 0, 7]
 
 ( <arg> ) { <bloco> } <func> $ 
-[(, (, 0, 8]
+[(, (, 0, 9]
 
 <arg> ) { <bloco> } <func> $ 
-[int, int, 0, 11]
+[int, int, 0, 13]
 
 int id ) { <bloco> } <func> $ 
-[int, int, 0, 11]
+[int, int, 0, 13]
 
 id ) { <bloco> } <func> $ 
-[id, n, 0, 13]
+[id, n, 0, 15]
 
 ) { <bloco> } <func> $ 
-[), ), 0, 14]
+[), ), 0, 17]
 
 { <bloco> } <func> $ 
-[{, {, 0, 16]
+[{, {, 0, 19]
 
 <bloco> } <func> $ 
 [if, if, 1, 3]
@@ -50,22 +50,22 @@ id <exp'> ) { <bloco> } <else> <bloco> } <func> $
 [id, n, 1, 6]
 
 <exp'> ) { <bloco> } <else> <bloco> } <func> $ 
-[opL, less, 1, 8]
+[opL, less_equal, 1, 9]
 
 opL <termo> ) { <bloco> } <else> <bloco> } <func> $ 
-[opL, less, 1, 8]
+[opL, less_equal, 1, 9]
 
 <termo> ) { <bloco> } <else> <bloco> } <func> $ 
-[INumber, 2, 1, 10]
+[INumber, 2, 1, 11]
 
 constante ) { <bloco> } <else> <bloco> } <func> $ 
-[INumber, 2, 1, 10]
+[INumber, 2, 1, 11]
 
 ) { <bloco> } <else> <bloco> } <func> $ 
-[), ), 1, 11]
+[), ), 1, 12]
 
 { <bloco> } <else> <bloco> } <func> $ 
-[{, {, 1, 12]
+[{, {, 1, 14]
 
 <bloco> } <else> <bloco> } <func> $ 
 [return, return, 2, 8]
@@ -80,10 +80,10 @@ return <termo> ; <bloco> } <else> <bloco> } <func> $
 [return, return, 2, 8]
 
 <termo> ; <bloco> } <else> <bloco> } <func> $ 
-[id, n, 2, 10]
+[INumber, 2, 2, 10]
 
-id ; <bloco> } <else> <bloco> } <func> $ 
-[id, n, 2, 10]
+constante ; <bloco> } <else> <bloco> } <func> $ 
+[INumber, 2, 2, 10]
 
 ; <bloco> } <else> <bloco> } <func> $ 
 [;, ;, 2, 11]
@@ -116,10 +116,10 @@ return <termo> ; <bloco> } <func> $
 [return, return, 4, 7]
 
 <termo> ; <bloco> } <func> $ 
-[INumber, 32, 4, 10]
+[INumber, 42, 4, 10]
 
 constante ; <bloco> } <func> $ 
-[INumber, 32, 4, 10]
+[INumber, 42, 4, 10]
 
 ; <bloco> } <func> $ 
 [;, ;, 4, 11]
@@ -155,7 +155,7 @@ empty ) { <bloco> } <func> $
 [), ), 6, 12]
 
 { <bloco> } <func> $ 
-[{, {, 6, 13]
+[{, {, 6, 14]
 
 <bloco> } <func> $ 
 [int, int, 7, 4]
@@ -173,148 +173,76 @@ id <decl'> ; <bloco> } <func> $
 [id, a, 7, 6]
 
 <decl'> ; <bloco> } <func> $ 
-[;, ;, 7, 7]
+[;, ;, 7, 8]
 
 empty ; <bloco> } <func> $ 
-[;, ;, 7, 7]
+[;, ;, 7, 8]
 
 ; <bloco> } <func> $ 
-[;, ;, 7, 7]
+[;, ;, 7, 8]
 
 <bloco> } <func> $ 
-[id, b, 8, 2]
+[id, a, 8, 2]
 
 <comando> <bloco> } <func> $ 
-[id, b, 8, 2]
+[id, a, 8, 2]
 
 <exp_atrib> <bloco> } <func> $ 
-[id, b, 8, 2]
+[id, a, 8, 2]
 
 id = <exp> ; <bloco> } <func> $ 
-[id, b, 8, 2]
+[id, a, 8, 2]
 
 = <exp> ; <bloco> } <func> $ 
 [=, =, 8, 4]
 
 <exp> ; <bloco> } <func> $ 
-[INumber, 1, 8, 6]
+[INumber, 10, 8, 7]
 
 <termo> <exp'> ; <bloco> } <func> $ 
-[INumber, 1, 8, 6]
+[INumber, 10, 8, 7]
 
 constante <exp'> ; <bloco> } <func> $ 
-[INumber, 1, 8, 6]
+[INumber, 10, 8, 7]
 
 <exp'> ; <bloco> } <func> $ 
-[opM, add, 8, 8]
-
-opM <termo> <exp'> ; <bloco> } <func> $ 
-[opM, add, 8, 8]
-
-<termo> <exp'> ; <bloco> } <func> $ 
-[INumber, 2, 8, 10]
-
-constante <exp'> ; <bloco> } <func> $ 
-[INumber, 2, 8, 10]
-
-<exp'> ; <bloco> } <func> $ 
-[;, ;, 8, 11]
+[;, ;, 8, 9]
 
 empty ; <bloco> } <func> $ 
-[;, ;, 8, 11]
+[;, ;, 8, 9]
 
 ; <bloco> } <func> $ 
-[;, ;, 8, 11]
+[;, ;, 8, 9]
 
 <bloco> } <func> $ 
-[id, a, 9, 2]
+[return, return, 9, 7]
 
 <comando> <bloco> } <func> $ 
-[id, a, 9, 2]
-
-<exp_atrib> <bloco> } <func> $ 
-[id, a, 9, 2]
-
-id = <exp> ; <bloco> } <func> $ 
-[id, a, 9, 2]
-
-= <exp> ; <bloco> } <func> $ 
-[=, =, 9, 4]
-
-<exp> ; <bloco> } <func> $ 
-[#, #, 9, 6]
-
-<termo> <exp'> ; <bloco> } <func> $ 
-[#, #, 9, 6]
-
-<func_cal> <exp'> ; <bloco> } <func> $ 
-[#, #, 9, 6]
-
-# id ( <call_args> ) <exp'> ; <bloco> } <func> $ 
-[#, #, 9, 6]
-
-id ( <call_args> ) <exp'> ; <bloco> } <func> $ 
-[id, fib, 9, 9]
-
-( <call_args> ) <exp'> ; <bloco> } <func> $ 
-[(, (, 9, 10]
-
-<call_args> ) <exp'> ; <bloco> } <func> $ 
-[INumber, 3, 9, 11]
-
-<termo> <call_args'> ) <exp'> ; <bloco> } <func> $ 
-[INumber, 3, 9, 11]
-
-constante <call_args'> ) <exp'> ; <bloco> } <func> $ 
-[INumber, 3, 9, 11]
-
-<call_args'> ) <exp'> ; <bloco> } <func> $ 
-[), ), 9, 12]
-
-empty ) <exp'> ; <bloco> } <func> $ 
-[), ), 9, 12]
-
-) <exp'> ; <bloco> } <func> $ 
-[), ), 9, 12]
-
-<exp'> ; <bloco> } <func> $ 
-[;, ;, 9, 13]
-
-empty ; <bloco> } <func> $ 
-[;, ;, 9, 13]
-
-; <bloco> } <func> $ 
-[;, ;, 9, 13]
-
-<bloco> } <func> $ 
-[return, return, 10, 7]
-
-<comando> <bloco> } <func> $ 
-[return, return, 10, 7]
+[return, return, 9, 7]
 
 <return_exp> <bloco> } <func> $ 
-[return, return, 10, 7]
+[return, return, 9, 7]
 
 return <termo> ; <bloco> } <func> $ 
-[return, return, 10, 7]
+[return, return, 9, 7]
 
 <termo> ; <bloco> } <func> $ 
-[INumber, 0, 10, 9]
+[INumber, 0, 9, 9]
 
 constante ; <bloco> } <func> $ 
-[INumber, 0, 10, 9]
+[INumber, 0, 9, 9]
 
 ; <bloco> } <func> $ 
-[;, ;, 10, 10]
+[;, ;, 9, 11]
 
 <bloco> } <func> $ 
-[}, }, 11, 1]
+[}, }, 10, 1]
 
 empty } <func> $ 
-[}, }, 11, 1]
+[}, }, 10, 1]
 
 } <func> $ 
-[}, }, 11, 1]
+[}, }, 10, 1]
 
 <func> $ 
 [$, $, -1, -1]
@@ -325,5 +253,6 @@ empty $
 $ 
 [$, $, -1, -1]
 
-Lexical Errors/Warnings:
-Linha: 8    Coluna: 2.....: Variavel nao declarada!!
+
+-------------------------------------------------------------------------------
+Any errors/warnings

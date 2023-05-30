@@ -26,6 +26,7 @@ int main(int argc, char* argv[]) {
     std::cin >> str;
     */
 
+    //funcs[id_funcao] = {Linha, coluna, tipo, agrs, ...}
     std::unordered_map<std::string, std::vector<std::string>, HashMatrix::custom_hash> funcs;
     HashMatrix symbol_table;
 
@@ -52,9 +53,14 @@ int main(int argc, char* argv[]) {
     parser pr(tokens);
     SyntaxTree AST;
     AST = pr.work(outFile, symbol_table, funcs);
+    outFile << '\n' << std::setfill('-') << std::setw(80) << '\n';
     pr.printerrors(outFile);
+    outFile.close();
     std::cout << "Analise sintatica feita!(Tecle ENTER)\n";
     system("pause > null");
+
+    outFile = std::ofstream("output_AST.txt");
+    AST.print_tree(outFile);
     outFile.close();
 
     return 0;

@@ -21,8 +21,7 @@ parser::parser(std::vector<token> const& tokens) {
 	this->tokens = tokens;
     this->tokens.push_back(token("$", "$", std::pair<int, int>(-1, -1)));
     
-	//Construção da tabela
-
+	//----------------------------------------------------Inicio da Construcao da tabela----------------------------------------------------
 	predictive_table.table["<termo>"] = {
 		{ "id", {"id"} }, {"constante", {"constante"}},
 		{"(", {"(", "<exp>", ")"}}, {"#", {"<func_cal>"}}
@@ -104,6 +103,8 @@ parser::parser(std::vector<token> const& tokens) {
 		{",", {"<termo>", "<call_args'>"}}, {")", {"empty"}}
 	};
 
+	//-------------------------------------------------------Fim da Construcao da tabela-------------------------------------------------------
+
 }
 
 void parser::exc_error(std::string at, std::string aux, std::pair<int, int> posi, int &id) {
@@ -156,32 +157,32 @@ SyntaxTree parser::work(std::ofstream &outFile, HashMatrix& symbol_table,
 		for (; !s.empty(); s.pop()) outFile << s.top() << ' ';
 		outFile << '\n';
 	};
+	
 	//Pilha do analisador
 	std::stack<std::string> st;
 	//Adicionar o simbolo $ e o simbolo inicial
 	st.push("$");
 	st.push("<func>");
 	
-	Node* p = new Node("$", "global");
+	//Criando a Arvore Sintatica
+	Node* p = new Node("<func>", "global");
 	AST.add_node(p);
 	Node* tree_node = AST.get_root();
-	p = new Node("<func>", "global", tree_node);
-	tree_node->add_child(p);
 
-	//auto add_node = [&]() {
-
-	//};
-	
 	int id = 0, function_args;
-	bool inside_decl, function_id, function_type, function_decl;
+	/*bool inside_decl, function_id, function_type, function_decl;
 	auto reset_levers = [&]() {
 		inside_decl = function_id = function_type = function_decl = function_args = false;
 	};
 	reset_levers();
-	std::string decl_type = "none", func_name = "none", func_to_call;
+	std::string decl_type = "none", func_name = "none", func_to_call;*/
+
+	//Inicio da analise sintatica
 	while(!st.empty()) {
+		//Printa a pilha e a entrada
 		print_stack(st);
 		outFile << tokens[id] << "\n\n";
+		
 		//Pegar o topo da pilha e simbolo para analisar
 		std::string at = st.top(); st.pop();
 		std::string aux = tokens[id].get_type();
@@ -190,7 +191,7 @@ SyntaxTree parser::work(std::ofstream &outFile, HashMatrix& symbol_table,
 		}
 		
 		if (at == aux) { //terminal com terminal igual
-			if (inside_decl && aux != ",") {
+			/*if (inside_decl && aux != ",") {
 				if (aux == ";") {
 					inside_decl = false;
 				}
@@ -267,39 +268,74 @@ SyntaxTree parser::work(std::ofstream &outFile, HashMatrix& symbol_table,
 					auto [x, y] = tokens[id].get_pos();
 					errors.push_back({ x, y, "Variavel nao declarada!!" });
 				}
-			}
+			}*/
+		
+			// Recursao para "regenerar" ate o no da producao atual na arvore sintatica
+			auto restore = [&](auto& self) ->void {
+				//Passar pro proximo filho
+				tree_node->id_child++;
+				//Subir na arvore ate chegar em um no que ainda tenha filhos a serem analisados
+				while (tree_node->get_parent() && tree_node->id_child == (int)tree_node->children.size()) {
+					tree_node = tree_node->get_parent();
+				}
 
-
+				// Se o filho atual for um nao terminal e ainda tiver producao que pode
+				// nao ter sido analisada, vai pra ele e verifica
+				if (tree_node->id_child < (int)tree_node->children.size()
+					&& (tree_node->children[tree_node->id_child])->get_tipo()[0] == '<') {
+					if (!(tree_node->children[tree_node->id_child])->is_leaf() &&
+						(tree_node->children[tree_node->id_child])->id_child == (int)(tree_node->children[tree_node->id_child])->children.size()) {
+						self(self);
+					}
+					else {
+						tree_node = tree_node->children[tree_node->id_child];
+					}
+				}
+			};
+			restore(restore);
 
 			id++;
 		}
 		else if (at[0] != '<') { //terminal com coisa diferente
+			tree_node->id_child++;
+			while (tree_node->get_parent() && tree_node->id_child == (int)tree_node->children.size()) {
+				tree_node = tree_node->get_parent();
+				tree_node->id_child++;
+			}
 			if (at == "empty") continue;
+			//reset_levers();
 			//erro analise sintatica
-			reset_levers();
 			exc_error(at, aux, tokens[id].get_pos(), id);
 		}
 		else{ //Nao terminal com outra coisa
 			if (predictive_table.table[at][aux].empty()){ //Se tiver numa celula vazia deu ruim
-				reset_levers();
+				if (tree_node->get_parent() && tree_node->id_child == (int)tree_node->children.size()) {
+					tree_node = tree_node->get_parent();
+				}
+				//reset_levers();
 				exc_error(at, aux, tokens[id].get_pos(), id);
 			}
 			else { //Remover nao terminal da pilha e adicionar a producao formada na pilha
-				//tree_node = tree_node->children[tree_node->id_child++];
-				if (at == "<decl>") {
+				/*if (at == "<decl>") {
 					inside_decl = true;
 				}
 				else if (at == "<arg>") {
 					function_decl = true;
-				}
-				//else if (at == "<call_args>") {
-				//	function_args = 2;
-				//}
+				}*/
+				
+				// Armazenar as producoes na pilha e criar aresta entre o pai e cada
+				//producao que ele vai gerar
 				int sz = (int)predictive_table.table[at][aux].size() - 1;
 				for (int i = sz; i >= 0; i--) {
+					std::string prod = predictive_table.table[at][aux][sz - i];
 					st.push(predictive_table.table[at][aux][i]);
-					//Node* cria = new Node(predictive_table[at][aux][sz - i], "global", tree_node);
-					//tree_node->add_child(cria);
+					Node* cria = new Node(prod, "global", tree_node);
+					tree_node->add_child(cria);
+				}
+
+				// Se o filho de agora for um nao terminal, passa pra ele
+				if ((tree_node->children[tree_node->id_child])->get_tipo()[0] == '<') {
+					tree_node = tree_node->children[tree_node->id_child++];
 				}
 			}
 		}

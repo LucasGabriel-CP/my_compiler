@@ -5,7 +5,25 @@ Construtor
 Parametros:
     filename -> Nome do arquivo com o programa fonte
 */
-lexer::lexer(){ }
+lexer::lexer(){
+    MOperators = {
+        {"+", "add"},
+        {"-", "sub"},
+        {"*", "mul"},
+        {"/", "div"},
+        {"%", "mod"},
+        {"^", "pow"}
+    };
+
+    LOperators = {
+        {">", "bigger"},
+        {"<", "less"},
+        {"==", "equal"},
+        {">=", "bigger_equal"},
+        {"<=", "less_equal"}
+    };
+}
+
 lexer::lexer(std::string const& filename) {
     MOperators = {
         {"+", "add"},
