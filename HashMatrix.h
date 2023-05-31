@@ -1,6 +1,7 @@
 #pragma once
 #include<iostream>
 #include<string>
+#include<map>
 #include<unordered_map>
 #include<chrono>
 #include<random>
@@ -29,6 +30,7 @@ public:
     std::unordered_map<std::string,
         std::unordered_map<std::string, std::vector<std::string>, custom_hash>,
         custom_hash> table;
+    std::map<std::string, std::string> parent;
     std::string add_id(std::string id_name, std::string decl_type, std::string scope, std::pair<int, int> posi);
     bool check_decl(std::string id_name, std::string scope);
     HashMatrix();

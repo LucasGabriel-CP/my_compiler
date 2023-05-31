@@ -1,12 +1,21 @@
 def fib ( int n ) {
+	int a;
 	if (n <= 2) {
 		return 2;
 	}
-	return 42;
+	else {
+		return 42;
+	}
 }
 
 def main ( ) {
-	int a ;
-	a = 10 ;
+	int a, b, c;
+	float b;
+	read(a);
+	while (a < 3) {
+		int a;
+		print(a);
+		a = a * (1 + 3);
+	}
 	return 0 ;
 }

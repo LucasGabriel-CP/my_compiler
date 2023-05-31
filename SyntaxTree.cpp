@@ -6,7 +6,7 @@ void SyntaxTree::dfs(Node* u, int &cnt, std::ostream& out){
         for (int i = 0; i < cnt; i++) {
             out << "  ";
         }
-        out << u->get_tipo() << " - " << v->get_tipo() << '\n';
+        out << u->get_tipo() << " - " << v->get_tipo() << " | " << v->get_valor() << '\n';
         dfs(v, cnt, out);
     }
     cnt--;

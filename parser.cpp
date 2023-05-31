@@ -26,6 +26,9 @@ parser::parser(std::vector<token> const& tokens) {
 		{ "id", {"id"} }, {"constante", {"constante"}},
 		{"(", {"(", "<exp>", ")"}}, {"#", {"<func_cal>"}}
 	};
+	predictive_table.table["<func'>"] = {
+		{ "def", {"<func>"}}
+	};
 	predictive_table.table["<func>"] = {
 		{ "def", {"def", "id", "(", "<arg>", ")", "{", "<bloco>", "}", "<func>"}}, {"$", {"empty"}}
 	};
@@ -150,8 +153,7 @@ Analisador sintatico (futuramente com o semantico)
 Parametros:
 	Arquivo de saida do analisador sintatico
 */
-SyntaxTree parser::work(std::ofstream &outFile, HashMatrix& symbol_table,
-						std::unordered_map<std::string, std::vector<std::string>, lexer::custom_hash>& funcs) {
+SyntaxTree parser::work(std::ofstream &outFile) {
 	//Funcao lambda pra printar a pilha do analisador
 	auto print_stack = [&](std::stack<std::string> s) {
 		for (; !s.empty(); s.pop()) outFile << s.top() << ' ';
@@ -162,14 +164,14 @@ SyntaxTree parser::work(std::ofstream &outFile, HashMatrix& symbol_table,
 	std::stack<std::string> st;
 	//Adicionar o simbolo $ e o simbolo inicial
 	st.push("$");
-	st.push("<func>");
+	st.push("<func'>");
 	
 	//Criando a Arvore Sintatica
-	Node* p = new Node("<func>", "global");
+	Node* p = new Node(token());
 	AST.add_node(p);
 	Node* tree_node = AST.get_root();
 
-	int id = 0, function_args;
+	int id = 0;
 	/*bool inside_decl, function_id, function_type, function_decl;
 	auto reset_levers = [&]() {
 		inside_decl = function_id = function_type = function_decl = function_args = false;
@@ -270,6 +272,11 @@ SyntaxTree parser::work(std::ofstream &outFile, HashMatrix& symbol_table,
 				}
 			}*/
 		
+			if (tree_node->id_child < (int)tree_node->children.size()) {
+				(tree_node->children[tree_node->id_child])->set_valor(tokens[id].get_text());
+				(tree_node->children[tree_node->id_child])->set_tipo(tokens[id].get_type());
+			}
+
 			// Recursao para "regenerar" ate o no da producao atual na arvore sintatica
 			auto restore = [&](auto& self) ->void {
 				//Passar pro proximo filho
@@ -298,7 +305,7 @@ SyntaxTree parser::work(std::ofstream &outFile, HashMatrix& symbol_table,
 		}
 		else if (at[0] != '<') { //terminal com coisa diferente
 			tree_node->id_child++;
-			while (tree_node->get_parent() && tree_node->id_child == (int)tree_node->children.size()) {
+			while (tree_node->get_parent() && tree_node->id_child >= (int)tree_node->children.size()) {
 				tree_node = tree_node->get_parent();
 				tree_node->id_child++;
 			}
@@ -329,7 +336,17 @@ SyntaxTree parser::work(std::ofstream &outFile, HashMatrix& symbol_table,
 				for (int i = sz; i >= 0; i--) {
 					std::string prod = predictive_table.table[at][aux][sz - i];
 					st.push(predictive_table.table[at][aux][i]);
-					Node* cria = new Node(prod, "global", tree_node);
+					token tk;
+					tk.set_text(prod);
+					if (prod[0] != '<') {
+						if (prod == "constante") {
+							prod = get_real_type(tokens[id].get_type());
+						}
+						tk.set_pos(tokens[id].get_pos());
+						tk.set_text(tokens[id].get_text());
+					}
+					tk.set_type(prod);
+					Node* cria = new Node(tk, tree_node);
 					tree_node->add_child(cria);
 				}
 

@@ -1,0 +1,3 @@
+Semantic Errors/Warnings:
+Linha: 11    Coluna: 6.....: Variavel b ja declarada: line 10 col 7
+Linha: 14....Coluna: 5.....: Variavel a ja declarada: line 10 col 4

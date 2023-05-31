@@ -25,7 +25,7 @@ private:
 public:
     parser();
     parser(std::vector<token> const &tokens);
-	SyntaxTree work(std::ofstream &e, HashMatrix&, std::unordered_map<std::string, std::vector<std::string>, HashMatrix::custom_hash>&);
+	SyntaxTree work(std::ofstream &);
     void exc_error(std::string at, std::string str, std::pair<int, int> posi, int& id);
     std::string get_real_type(std::string str);
     void add_prod(std::string row, std::string col, std::vector<std::string> res);

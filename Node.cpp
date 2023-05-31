@@ -1,19 +1,16 @@
 #include "Node.h"
 
 Node::Node() {
-    tipo = escopo = valor = "none";
+    data = token();
     parent = nullptr;
 }
 
-Node::Node(std::string _tipo, std::string _escopo):
-    tipo(_tipo), escopo(_escopo) {
+Node::Node(token tk): data(tk) {
     parent = nullptr;
-    valor = "none";
 }
 
-Node::Node(std::string _tipo, std::string _escopo, Node* p):
-    tipo(_tipo), escopo(_escopo), parent(p) {
-    valor = "none";
+Node::Node(token tk, Node* p) :
+    data(tk), parent(p) {
 }
 
 void Node::add_child(Node* c) {
@@ -21,23 +18,23 @@ void Node::add_child(Node* c) {
 }
 
 std::string Node::get_tipo() {
-    return tipo;
+    return data.get_type();
 }
 
-std::string Node::get_escopo() {
-    return escopo;
+std::string Node::get_valor() {
+    return data.get_text();
+}
+
+std::pair<int, int> Node::get_pos() {
+    return data.get_pos();
 }
 
 void Node::set_tipo(std::string str) {
-    tipo = str;
+    data.set_type(str);
 }
 
 void Node::set_valor(std::string val) {
-    valor = val;
-}
-
-void Node::set_escopo(std::string str) {
-    escopo = str;
+    data.set_text(val);
 }
 
 Node* Node::get_parent() {
