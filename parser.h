@@ -29,4 +29,5 @@ public:
     void exc_error(std::string at, std::string str, std::pair<int, int> posi, int& id);
     std::string get_real_type(std::string str);
     void add_prod(std::string row, std::string col, std::vector<std::string> res);
+    void printerrors(std::ostream& os);
 };

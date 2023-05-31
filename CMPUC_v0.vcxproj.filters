@@ -62,4 +62,18 @@
       <Filter>Arquivos de Recurso</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="output_lexer.txt">
+      <Filter>Arquivos de Recurso</Filter>
+    </Text>
+    <Text Include="output_parser.txt">
+      <Filter>Arquivos de Recurso</Filter>
+    </Text>
+    <Text Include="output_semantic.txt">
+      <Filter>Arquivos de Recurso</Filter>
+    </Text>
+    <Text Include="output_AST.txt">
+      <Filter>Arquivos de Recurso</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

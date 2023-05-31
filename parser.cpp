@@ -360,3 +360,20 @@ SyntaxTree parser::work(std::ofstream &outFile) {
 
 	return AST;
 }
+
+/*
+Funcao para printar erros
+Parametros:
+	os -> arquivo de saida
+*/
+void parser::printerrors(std::ostream& os) {
+	if (errors.empty()) {
+		os << "Any errors/warnings\n"; return;
+	}
+	os << "Syntatic Errors/Warnings:\n";
+	for (auto& [li, col, cara] : errors) {
+		os << "Linha: " << li << std::setw(12)
+			<< "Coluna: " << col << std::setfill('.') << std::setw(7)
+			<< ": " << cara << '\n';
+	}
+}
