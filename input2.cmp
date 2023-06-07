@@ -1,14 +1,3 @@
-def fib ( int n ) {
-	int e;
-	e = 1;
-	if (n <= 2) {
-		return 2;
-	}
-	else {
-		return 42;
-	}
-}
-
 def main ( ) {
 	int a, b, c;
 	float d;

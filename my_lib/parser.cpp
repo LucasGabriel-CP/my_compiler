@@ -193,84 +193,6 @@ SyntaxTree parser::work(std::ofstream &outFile) {
 		}
 		
 		if (at == aux) { //terminal com terminal igual
-			/*if (inside_decl && aux != ",") {
-				if (aux == ";") {
-					inside_decl = false;
-				}
-				else {
-					if (aux != "id") {
-						decl_type = tokens[id].get_text();
-					}
-					else {
-						std::string err = symbol_table.add_id(tokens[id].get_text(), "global", func_name, tokens[id].get_pos());
-						if (!err.empty()) {
-							auto [x, y] = tokens[id].get_pos();
-							errors.push_back({ x, y, "Variavel ja declarada!!" });
-						}
-					}
-				}
-			}
-			else if (aux == "def") {
-				function_id = true;
-			}
-			else if (function_id) {
-				std::string id_name = tokens[id].get_text(),
-					posi = "line " + std::to_string(tokens[id].get_pos().second) + " col " + std::to_string(tokens[id].get_pos().first);
-				if (funcs.find(id_name) != funcs.end()) {
-					std::cout << "Funcao ja declarada: " << funcs[id_name][1] << '\n';
-				}
-				else {
-					funcs[id_name] = { "none", posi};
-				}
-				func_name = id_name;
-				function_id = false;
-			}
-			else if (aux == "return") {
-				function_type = true;
-			}
-			else if (function_type) {
-				if (aux == "id") {
-					std::string tp = symbol_table.table["global"][tokens[id].get_text()][0];
-					if (tp != "none") {
-						if (funcs[func_name][0] != "none" && tp != funcs[func_name][0]) {
-							auto [x, y] = tokens[id].get_pos();
-							errors.push_back({ x, y, "multiple returning types" });
-						}
-						funcs[func_name][0] = tp;
-					}
-				}
-				else {
-					std::string tp = get_real_type(tokens[id].get_type());
-					if (funcs[func_name][0] != "none" && tp != funcs[func_name][0]) {
-						auto [x, y] = tokens[id].get_pos();
-						errors.push_back({ x, y, "multiple returning types" });
-					}
-					funcs[func_name][0] = get_real_type(tokens[id].get_type());
-				}
-				function_type = false;
-			}
-			else if (function_decl) {
-				if (at == "id") {
-					std::string err = symbol_table.add_id(tokens[id].get_text(), decl_type, func_name, tokens[id].get_pos());
-					funcs[func_name].push_back(decl_type);
-					if (!err.empty()) {
-						auto [x, y] = tokens[id].get_pos();
-						errors.push_back({ x, y, err });
-					}
-				}
-				else if (at == ")") {
-					function_decl = false;
-				}
-				else {
-					decl_type = at;
-				}
-			}
-			else if (aux == "id") {
-				if (!symbol_table.check_decl(tokens[id].get_text(), "global") && funcs.find(tokens[id].get_text()) == funcs.end()) {
-					auto [x, y] = tokens[id].get_pos();
-					errors.push_back({ x, y, "Variavel nao declarada!!" });
-				}
-			}*/
 		
 			if (tree_node->id_child < (int)tree_node->children.size()) {
 				(tree_node->children[tree_node->id_child])->set_valor(tokens[id].get_text());
@@ -323,13 +245,6 @@ SyntaxTree parser::work(std::ofstream &outFile) {
 				exc_error(at, aux, tokens[id].get_pos(), id);
 			}
 			else { //Remover nao terminal da pilha e adicionar a producao formada na pilha
-				/*if (at == "<decl>") {
-					inside_decl = true;
-				}
-				else if (at == "<arg>") {
-					function_decl = true;
-				}*/
-				
 				// Armazenar as producoes na pilha e criar aresta entre o pai e cada
 				//producao que ele vai gerar
 				int sz = (int)predictive_table.table[at][aux].size() - 1;

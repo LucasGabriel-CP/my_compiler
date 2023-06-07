@@ -70,6 +70,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>D:\Bibliotecas\Documents\Compiladores\CMPUC_v0\my_lib\util;D:\Bibliotecas\Documents\Compiladores\CMPUC_v0\my_lib;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -131,21 +134,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="HashMatrix.cpp" />
-    <ClCompile Include="lexer.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Node.cpp" />
-    <ClCompile Include="parser.cpp" />
-    <ClCompile Include="SyntaxTree.cpp" />
-    <ClCompile Include="token.cpp" />
+    <ClCompile Include="my_lib\lexer.cpp" />
+    <ClCompile Include="my_lib\parser.cpp" />
+    <ClCompile Include="my_lib\util\HashMatrix.cpp" />
+    <ClCompile Include="my_lib\util\Node.cpp" />
+    <ClCompile Include="my_lib\util\SyntaxTree.cpp" />
+    <ClCompile Include="my_lib\util\token.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="HashMatrix.h" />
-    <ClInclude Include="lexer.h" />
-    <ClInclude Include="Node.h" />
-    <ClInclude Include="parser.h" />
-    <ClInclude Include="SyntaxTree.h" />
-    <ClInclude Include="token.h" />
+    <ClInclude Include="my_lib\compilador.h" />
+    <ClInclude Include="my_lib\lexer.h" />
+    <ClInclude Include="my_lib\parser.h" />
+    <ClInclude Include="my_lib\semantic.h" />
+    <ClInclude Include="my_lib\util\HashMatrix.h" />
+    <ClInclude Include="my_lib\util\Node.h" />
+    <ClInclude Include="my_lib\util\SyntaxTree.h" />
+    <ClInclude Include="my_lib\util\token.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="input2.cmp" />
