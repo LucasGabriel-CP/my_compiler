@@ -15,7 +15,7 @@ Phases complited:
     * Created a Syntax Tree
 * Semantic Analysis
     * Used the Syntax Tree from previous step
-
+    
 Future phases:
 
 * Code Optmiser

@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\Bibliotecas\Documents\Compiladores\CMPUC_v0\my_lib\util;D:\Bibliotecas\Documents\Compiladores\CMPUC_v0\my_lib;$(IncludePath)</IncludePath>
+    <IncludePath>D:\Bibliotecas\Documents\Compiladores\my_compiler\my_lib\util;D:\Bibliotecas\Documents\Compiladores\my_compiler\my_lib;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
