@@ -12,9 +12,10 @@ std::string HashMatrix::add_id(std::string id_name, std::string decl_type, std::
 	return "";
 }
 
-bool HashMatrix::check_decl(std::string id_name, std::string scope) {
+bool HashMatrix::check_decl(std::string id_name, std::string scope, std::string &par) {
 	while (scope != "NULL") {
 		if (table[scope].find(id_name) != table[scope].end()) {
+			par = scope;
 			return true;
 		}
 		scope = parent[scope];

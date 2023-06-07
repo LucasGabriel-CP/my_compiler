@@ -1,9 +1,7 @@
 #include "lexer.h"
 
 /*
-Construtor
-Parametros:
-    filename -> Nome do arquivo com o programa fonte
+Construtor padrao
 */
 lexer::lexer(){
     MOperators = {
@@ -24,6 +22,11 @@ lexer::lexer(){
     };
 }
 
+/*
+Construtor
+Parametros:
+    filename -> Nome do arquivo com o programa fonte
+*/
 lexer::lexer(std::string const& filename) {
     MOperators = {
         {"+", "add"},

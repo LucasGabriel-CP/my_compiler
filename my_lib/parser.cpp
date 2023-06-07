@@ -33,8 +33,15 @@ parser::parser(std::vector<token> const& tokens) {
 		{ "def", {"def", "id", "(", "<arg>", ")", "{", "<bloco>", "}", "<func>"}}, {"$", {"empty"}}
 	};
 	predictive_table.table["<arg>"] = {
-		{"int", {"int", "id"}}, {"float", {"float", "id"}},
-		{"string", {"string", "id"}}, {")", {"empty"}}
+		{"int", {"int", "id", "<arg'>"}}, {"float", {"float", "id", "<arg'>"}},
+		{"string", {"string", "id", "<arg'>"}}, {")", {"empty"}}
+	};
+	predictive_table.table["<arg'>"] = {
+		{",", {",", "<tipo_arg>", "id", "<arg'>"}}, {")", {"empty"}}
+	};
+	predictive_table.table["<tipo_arg>"] = {
+		{"int", {"int"}}, {"float", {"float"}},
+		{"string", {"string"}}
 	};
 
 	predictive_table.table["<bloco>"] = {
@@ -103,13 +110,22 @@ parser::parser(std::vector<token> const& tokens) {
 		{"(", {"<termo>", "<call_args'>"}}, {")", {"empty"}}
 	};
 	predictive_table.table["<call_args'>"] = {
-		{",", {"<termo>", "<call_args'>"}}, {")", {"empty"}}
+		{",", {",", "<termo>", "<call_args'>"}}, {")", {"empty"}}
 	};
 
 	//-------------------------------------------------------Fim da Construcao da tabela-------------------------------------------------------
 
 }
 
+
+/*
+Funcao para executar o erro certo
+Parametros:
+	at: simbolo da pilha
+	aux: simbolo da entrada
+	posi: posicao do codigo
+	id: posicao do token
+*/
 void parser::exc_error(std::string at, std::string aux, std::pair<int, int> posi, int &id) {
 	auto [line, col] = posi;
 	if (at == ")") {
@@ -172,12 +188,6 @@ SyntaxTree parser::work(std::ofstream &outFile) {
 	Node* tree_node = AST.get_root();
 
 	int id = 0;
-	/*bool inside_decl, function_id, function_type, function_decl;
-	auto reset_levers = [&]() {
-		inside_decl = function_id = function_type = function_decl = function_args = false;
-	};
-	reset_levers();
-	std::string decl_type = "none", func_name = "none", func_to_call;*/
 
 	//Inicio da analise sintatica
 	while(!st.empty()) {
@@ -287,7 +297,7 @@ void parser::printerrors(std::ostream& os) {
 	}
 	os << "Syntatic Errors/Warnings:\n";
 	for (auto& [li, col, cara] : errors) {
-		os << "Linha: " << li << std::setw(12)
+		os << "Linha: " << li << std::setfill('.') << std::setw(12)
 			<< "Coluna: " << col << std::setfill('.') << std::setw(7)
 			<< ": " << cara << '\n';
 	}

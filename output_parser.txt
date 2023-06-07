@@ -8,22 +8,46 @@ def id ( <arg> ) { <bloco> } <func> $
 [def, def, 0, 3]
 
 id ( <arg> ) { <bloco> } <func> $ 
-[id, main, 0, 8]
+[id, fib, 0, 7]
 
 ( <arg> ) { <bloco> } <func> $ 
-[(, (, 0, 10]
+[(, (, 0, 9]
 
 <arg> ) { <bloco> } <func> $ 
-[), ), 0, 12]
+[int, int, 0, 13]
+
+int id <arg'> ) { <bloco> } <func> $ 
+[int, int, 0, 13]
+
+id <arg'> ) { <bloco> } <func> $ 
+[id, n, 0, 15]
+
+<arg'> ) { <bloco> } <func> $ 
+[,, ,, 0, 16]
+
+, <tipo_arg> id <arg'> ) { <bloco> } <func> $ 
+[,, ,, 0, 16]
+
+<tipo_arg> id <arg'> ) { <bloco> } <func> $ 
+[int, int, 0, 20]
+
+int id <arg'> ) { <bloco> } <func> $ 
+[int, int, 0, 20]
+
+id <arg'> ) { <bloco> } <func> $ 
+[id, y, 0, 22]
+
+<arg'> ) { <bloco> } <func> $ 
+[), ), 0, 24]
 
 empty ) { <bloco> } <func> $ 
-[), ), 0, 12]
+[), ), 0, 24]
 
 ) { <bloco> } <func> $ 
-[), ), 0, 12]
+[), ), 0, 24]
 
 { <bloco> } <func> $ 
-[{, {, 0, 14]
+[{, {, 0, 26]
 
 <bloco> } <func> $ 
 [int, int, 1, 4]
@@ -38,271 +62,151 @@ int id <decl'> ; <bloco> } <func> $
 [int, int, 1, 4]
 
 id <decl'> ; <bloco> } <func> $ 
-[id, a, 1, 6]
+[id, e, 1, 6]
 
 <decl'> ; <bloco> } <func> $ 
-[,, ,, 1, 7]
-
-, id <decl'> ; <bloco> } <func> $ 
-[,, ,, 1, 7]
-
-id <decl'> ; <bloco> } <func> $ 
-[id, b, 1, 9]
-
-<decl'> ; <bloco> } <func> $ 
-[,, ,, 1, 10]
-
-, id <decl'> ; <bloco> } <func> $ 
-[,, ,, 1, 10]
-
-id <decl'> ; <bloco> } <func> $ 
-[id, c, 1, 12]
-
-<decl'> ; <bloco> } <func> $ 
-[;, ;, 1, 13]
+[;, ;, 1, 7]
 
 empty ; <bloco> } <func> $ 
-[;, ;, 1, 13]
+[;, ;, 1, 7]
 
 ; <bloco> } <func> $ 
-[;, ;, 1, 13]
+[;, ;, 1, 7]
 
 <bloco> } <func> $ 
-[float, float, 2, 6]
+[id, e, 2, 2]
 
 <comando> <bloco> } <func> $ 
-[float, float, 2, 6]
+[id, e, 2, 2]
 
-<decl> <bloco> } <func> $ 
-[float, float, 2, 6]
+<exp_atrib> <bloco> } <func> $ 
+[id, e, 2, 2]
 
-float id <decl'> ; <bloco> } <func> $ 
-[float, float, 2, 6]
+id = <exp> ; <bloco> } <func> $ 
+[id, e, 2, 2]
 
-id <decl'> ; <bloco> } <func> $ 
-[id, d, 2, 8]
+= <exp> ; <bloco> } <func> $ 
+[=, =, 2, 4]
 
-<decl'> ; <bloco> } <func> $ 
-[;, ;, 2, 9]
+<exp> ; <bloco> } <func> $ 
+[INumber, 1, 2, 6]
+
+<termo> <exp'> ; <bloco> } <func> $ 
+[INumber, 1, 2, 6]
+
+constante <exp'> ; <bloco> } <func> $ 
+[INumber, 1, 2, 6]
+
+<exp'> ; <bloco> } <func> $ 
+[;, ;, 2, 7]
 
 empty ; <bloco> } <func> $ 
-[;, ;, 2, 9]
+[;, ;, 2, 7]
 
 ; <bloco> } <func> $ 
-[;, ;, 2, 9]
+[;, ;, 2, 7]
 
 <bloco> } <func> $ 
-[string, string, 3, 7]
+[if, if, 3, 3]
 
 <comando> <bloco> } <func> $ 
-[string, string, 3, 7]
+[if, if, 3, 3]
 
-<decl> <bloco> } <func> $ 
-[string, string, 3, 7]
+<if> <bloco> } <func> $ 
+[if, if, 3, 3]
 
-string id <decl'> ; <bloco> } <func> $ 
-[string, string, 3, 7]
+if ( <exp> ) { <bloco> } <else> <bloco> } <func> $ 
+[if, if, 3, 3]
 
-id <decl'> ; <bloco> } <func> $ 
-[id, e, 3, 9]
+( <exp> ) { <bloco> } <else> <bloco> } <func> $ 
+[(, (, 3, 5]
 
-<decl'> ; <bloco> } <func> $ 
-[;, ;, 3, 10]
+<exp> ) { <bloco> } <else> <bloco> } <func> $ 
+[id, n, 3, 6]
 
-empty ; <bloco> } <func> $ 
-[;, ;, 3, 10]
+<termo> <exp'> ) { <bloco> } <else> <bloco> } <func> $ 
+[id, n, 3, 6]
 
-; <bloco> } <func> $ 
-[;, ;, 3, 10]
+id <exp'> ) { <bloco> } <else> <bloco> } <func> $ 
+[id, n, 3, 6]
 
-<bloco> } <func> $ 
-[read, read, 4, 5]
+<exp'> ) { <bloco> } <else> <bloco> } <func> $ 
+[opL, less_equal, 3, 9]
 
-<comando> <bloco> } <func> $ 
-[read, read, 4, 5]
+opL <termo> ) { <bloco> } <else> <bloco> } <func> $ 
+[opL, less_equal, 3, 9]
 
-<read> <bloco> } <func> $ 
-[read, read, 4, 5]
+<termo> ) { <bloco> } <else> <bloco> } <func> $ 
+[INumber, 2, 3, 11]
 
-read ( id <read'> ) ; <bloco> } <func> $ 
-[read, read, 4, 5]
+constante ) { <bloco> } <else> <bloco> } <func> $ 
+[INumber, 2, 3, 11]
 
-( id <read'> ) ; <bloco> } <func> $ 
-[(, (, 4, 6]
+) { <bloco> } <else> <bloco> } <func> $ 
+[), ), 3, 12]
 
-id <read'> ) ; <bloco> } <func> $ 
-[id, a, 4, 7]
+{ <bloco> } <else> <bloco> } <func> $ 
+[{, {, 3, 14]
 
-<read'> ) ; <bloco> } <func> $ 
-[,, ,, 4, 8]
+<bloco> } <else> <bloco> } <func> $ 
+[return, return, 4, 8]
 
-, id <read'> ) ; <bloco> } <func> $ 
-[,, ,, 4, 8]
+<comando> <bloco> } <else> <bloco> } <func> $ 
+[return, return, 4, 8]
 
-id <read'> ) ; <bloco> } <func> $ 
-[id, b, 4, 10]
+<return_exp> <bloco> } <else> <bloco> } <func> $ 
+[return, return, 4, 8]
 
-<read'> ) ; <bloco> } <func> $ 
-[), ), 4, 11]
+return <termo> ; <bloco> } <else> <bloco> } <func> $ 
+[return, return, 4, 8]
 
-empty ) ; <bloco> } <func> $ 
-[), ), 4, 11]
+<termo> ; <bloco> } <else> <bloco> } <func> $ 
+[INumber, 2, 4, 10]
 
-) ; <bloco> } <func> $ 
-[), ), 4, 11]
+constante ; <bloco> } <else> <bloco> } <func> $ 
+[INumber, 2, 4, 10]
 
-; <bloco> } <func> $ 
-[;, ;, 4, 12]
+; <bloco> } <else> <bloco> } <func> $ 
+[;, ;, 4, 11]
 
-<bloco> } <func> $ 
-[while, while, 5, 6]
+<bloco> } <else> <bloco> } <func> $ 
+[}, }, 5, 2]
 
-<comando> <bloco> } <func> $ 
-[while, while, 5, 6]
+empty } <else> <bloco> } <func> $ 
+[}, }, 5, 2]
 
-<while> <bloco> } <func> $ 
-[while, while, 5, 6]
+} <else> <bloco> } <func> $ 
+[}, }, 5, 2]
 
-while ( <exp> ) { <bloco> } <bloco> } <func> $ 
-[while, while, 5, 6]
+<else> <bloco> } <func> $ 
+[else, else, 6, 5]
 
-( <exp> ) { <bloco> } <bloco> } <func> $ 
-[(, (, 5, 8]
-
-<exp> ) { <bloco> } <bloco> } <func> $ 
-[id, a, 5, 9]
-
-<termo> <exp'> ) { <bloco> } <bloco> } <func> $ 
-[id, a, 5, 9]
-
-id <exp'> ) { <bloco> } <bloco> } <func> $ 
-[id, a, 5, 9]
-
-<exp'> ) { <bloco> } <bloco> } <func> $ 
-[opL, less, 5, 11]
-
-opL <termo> ) { <bloco> } <bloco> } <func> $ 
-[opL, less, 5, 11]
-
-<termo> ) { <bloco> } <bloco> } <func> $ 
-[INumber, 3, 5, 13]
-
-constante ) { <bloco> } <bloco> } <func> $ 
-[INumber, 3, 5, 13]
-
-) { <bloco> } <bloco> } <func> $ 
-[), ), 5, 14]
+else { <bloco> } <bloco> } <func> $ 
+[else, else, 6, 5]
 
 { <bloco> } <bloco> } <func> $ 
-[{, {, 5, 16]
+[{, {, 6, 7]
 
 <bloco> } <bloco> } <func> $ 
-[print, print, 6, 7]
+[return, return, 7, 8]
 
 <comando> <bloco> } <bloco> } <func> $ 
-[print, print, 6, 7]
+[return, return, 7, 8]
 
-<print> <bloco> } <bloco> } <func> $ 
-[print, print, 6, 7]
+<return_exp> <bloco> } <bloco> } <func> $ 
+[return, return, 7, 8]
 
-print ( <termo> <print'> ) ; <bloco> } <bloco> } <func> $ 
-[print, print, 6, 7]
+return <termo> ; <bloco> } <bloco> } <func> $ 
+[return, return, 7, 8]
 
-( <termo> <print'> ) ; <bloco> } <bloco> } <func> $ 
-[(, (, 6, 8]
+<termo> ; <bloco> } <bloco> } <func> $ 
+[INumber, 42, 7, 11]
 
-<termo> <print'> ) ; <bloco> } <bloco> } <func> $ 
-[id, a, 6, 9]
-
-id <print'> ) ; <bloco> } <bloco> } <func> $ 
-[id, a, 6, 9]
-
-<print'> ) ; <bloco> } <bloco> } <func> $ 
-[), ), 6, 10]
-
-empty ) ; <bloco> } <bloco> } <func> $ 
-[), ), 6, 10]
-
-) ; <bloco> } <bloco> } <func> $ 
-[), ), 6, 10]
+constante ; <bloco> } <bloco> } <func> $ 
+[INumber, 42, 7, 11]
 
 ; <bloco> } <bloco> } <func> $ 
-[;, ;, 6, 11]
-
-<bloco> } <bloco> } <func> $ 
-[id, a, 7, 3]
-
-<comando> <bloco> } <bloco> } <func> $ 
-[id, a, 7, 3]
-
-<exp_atrib> <bloco> } <bloco> } <func> $ 
-[id, a, 7, 3]
-
-id = <exp> ; <bloco> } <bloco> } <func> $ 
-[id, a, 7, 3]
-
-= <exp> ; <bloco> } <bloco> } <func> $ 
-[=, =, 7, 5]
-
-<exp> ; <bloco> } <bloco> } <func> $ 
-[id, a, 7, 7]
-
-<termo> <exp'> ; <bloco> } <bloco> } <func> $ 
-[id, a, 7, 7]
-
-id <exp'> ; <bloco> } <bloco> } <func> $ 
-[id, a, 7, 7]
-
-<exp'> ; <bloco> } <bloco> } <func> $ 
-[opM, mul, 7, 9]
-
-opM <termo> <exp'> ; <bloco> } <bloco> } <func> $ 
-[opM, mul, 7, 9]
-
-<termo> <exp'> ; <bloco> } <bloco> } <func> $ 
-[(, (, 7, 11]
-
-( <exp> ) <exp'> ; <bloco> } <bloco> } <func> $ 
-[(, (, 7, 11]
-
-<exp> ) <exp'> ; <bloco> } <bloco> } <func> $ 
-[INumber, 1, 7, 12]
-
-<termo> <exp'> ) <exp'> ; <bloco> } <bloco> } <func> $ 
-[INumber, 1, 7, 12]
-
-constante <exp'> ) <exp'> ; <bloco> } <bloco> } <func> $ 
-[INumber, 1, 7, 12]
-
-<exp'> ) <exp'> ; <bloco> } <bloco> } <func> $ 
-[opM, add, 7, 14]
-
-opM <termo> <exp'> ) <exp'> ; <bloco> } <bloco> } <func> $ 
-[opM, add, 7, 14]
-
-<termo> <exp'> ) <exp'> ; <bloco> } <bloco> } <func> $ 
-[INumber, 3, 7, 16]
-
-constante <exp'> ) <exp'> ; <bloco> } <bloco> } <func> $ 
-[INumber, 3, 7, 16]
-
-<exp'> ) <exp'> ; <bloco> } <bloco> } <func> $ 
-[), ), 7, 17]
-
-empty ) <exp'> ; <bloco> } <bloco> } <func> $ 
-[), ), 7, 17]
-
-) <exp'> ; <bloco> } <bloco> } <func> $ 
-[), ), 7, 17]
-
-<exp'> ; <bloco> } <bloco> } <func> $ 
-[;, ;, 7, 18]
-
-empty ; <bloco> } <bloco> } <func> $ 
-[;, ;, 7, 18]
-
-; <bloco> } <bloco> } <func> $ 
-[;, ;, 7, 18]
+[;, ;, 7, 12]
 
 <bloco> } <bloco> } <func> $ 
 [}, }, 8, 2]
@@ -314,34 +218,427 @@ empty } <bloco> } <func> $
 [}, }, 8, 2]
 
 <bloco> } <func> $ 
-[return, return, 9, 7]
-
-<comando> <bloco> } <func> $ 
-[return, return, 9, 7]
-
-<return_exp> <bloco> } <func> $ 
-[return, return, 9, 7]
-
-return <termo> ; <bloco> } <func> $ 
-[return, return, 9, 7]
-
-<termo> ; <bloco> } <func> $ 
-[INumber, 0, 9, 9]
-
-constante ; <bloco> } <func> $ 
-[INumber, 0, 9, 9]
-
-; <bloco> } <func> $ 
-[;, ;, 9, 10]
-
-<bloco> } <func> $ 
-[}, }, 10, 1]
+[}, }, 9, 1]
 
 empty } <func> $ 
-[}, }, 10, 1]
+[}, }, 9, 1]
 
 } <func> $ 
-[}, }, 10, 1]
+[}, }, 9, 1]
+
+<func> $ 
+[def, def, 10, 3]
+
+def id ( <arg> ) { <bloco> } <func> $ 
+[def, def, 10, 3]
+
+id ( <arg> ) { <bloco> } <func> $ 
+[id, main, 10, 8]
+
+( <arg> ) { <bloco> } <func> $ 
+[(, (, 10, 10]
+
+<arg> ) { <bloco> } <func> $ 
+[), ), 10, 12]
+
+empty ) { <bloco> } <func> $ 
+[), ), 10, 12]
+
+) { <bloco> } <func> $ 
+[), ), 10, 12]
+
+{ <bloco> } <func> $ 
+[{, {, 10, 14]
+
+<bloco> } <func> $ 
+[int, int, 11, 4]
+
+<comando> <bloco> } <func> $ 
+[int, int, 11, 4]
+
+<decl> <bloco> } <func> $ 
+[int, int, 11, 4]
+
+int id <decl'> ; <bloco> } <func> $ 
+[int, int, 11, 4]
+
+id <decl'> ; <bloco> } <func> $ 
+[id, a, 11, 6]
+
+<decl'> ; <bloco> } <func> $ 
+[,, ,, 11, 7]
+
+, id <decl'> ; <bloco> } <func> $ 
+[,, ,, 11, 7]
+
+id <decl'> ; <bloco> } <func> $ 
+[id, b, 11, 9]
+
+<decl'> ; <bloco> } <func> $ 
+[,, ,, 11, 10]
+
+, id <decl'> ; <bloco> } <func> $ 
+[,, ,, 11, 10]
+
+id <decl'> ; <bloco> } <func> $ 
+[id, c, 11, 12]
+
+<decl'> ; <bloco> } <func> $ 
+[;, ;, 11, 13]
+
+empty ; <bloco> } <func> $ 
+[;, ;, 11, 13]
+
+; <bloco> } <func> $ 
+[;, ;, 11, 13]
+
+<bloco> } <func> $ 
+[float, float, 12, 6]
+
+<comando> <bloco> } <func> $ 
+[float, float, 12, 6]
+
+<decl> <bloco> } <func> $ 
+[float, float, 12, 6]
+
+float id <decl'> ; <bloco> } <func> $ 
+[float, float, 12, 6]
+
+id <decl'> ; <bloco> } <func> $ 
+[id, d, 12, 8]
+
+<decl'> ; <bloco> } <func> $ 
+[;, ;, 12, 9]
+
+empty ; <bloco> } <func> $ 
+[;, ;, 12, 9]
+
+; <bloco> } <func> $ 
+[;, ;, 12, 9]
+
+<bloco> } <func> $ 
+[string, string, 13, 7]
+
+<comando> <bloco> } <func> $ 
+[string, string, 13, 7]
+
+<decl> <bloco> } <func> $ 
+[string, string, 13, 7]
+
+string id <decl'> ; <bloco> } <func> $ 
+[string, string, 13, 7]
+
+id <decl'> ; <bloco> } <func> $ 
+[id, e, 13, 9]
+
+<decl'> ; <bloco> } <func> $ 
+[;, ;, 13, 10]
+
+empty ; <bloco> } <func> $ 
+[;, ;, 13, 10]
+
+; <bloco> } <func> $ 
+[;, ;, 13, 10]
+
+<bloco> } <func> $ 
+[read, read, 14, 5]
+
+<comando> <bloco> } <func> $ 
+[read, read, 14, 5]
+
+<read> <bloco> } <func> $ 
+[read, read, 14, 5]
+
+read ( id <read'> ) ; <bloco> } <func> $ 
+[read, read, 14, 5]
+
+( id <read'> ) ; <bloco> } <func> $ 
+[(, (, 14, 6]
+
+id <read'> ) ; <bloco> } <func> $ 
+[id, a, 14, 7]
+
+<read'> ) ; <bloco> } <func> $ 
+[,, ,, 14, 8]
+
+, id <read'> ) ; <bloco> } <func> $ 
+[,, ,, 14, 8]
+
+id <read'> ) ; <bloco> } <func> $ 
+[id, b, 14, 10]
+
+<read'> ) ; <bloco> } <func> $ 
+[), ), 14, 11]
+
+empty ) ; <bloco> } <func> $ 
+[), ), 14, 11]
+
+) ; <bloco> } <func> $ 
+[), ), 14, 11]
+
+; <bloco> } <func> $ 
+[;, ;, 14, 12]
+
+<bloco> } <func> $ 
+[id, a, 15, 2]
+
+<comando> <bloco> } <func> $ 
+[id, a, 15, 2]
+
+<exp_atrib> <bloco> } <func> $ 
+[id, a, 15, 2]
+
+id = <exp> ; <bloco> } <func> $ 
+[id, a, 15, 2]
+
+= <exp> ; <bloco> } <func> $ 
+[=, =, 15, 4]
+
+<exp> ; <bloco> } <func> $ 
+[#, #, 15, 6]
+
+<termo> <exp'> ; <bloco> } <func> $ 
+[#, #, 15, 6]
+
+<func_cal> <exp'> ; <bloco> } <func> $ 
+[#, #, 15, 6]
+
+# id ( <call_args> ) <exp'> ; <bloco> } <func> $ 
+[#, #, 15, 6]
+
+id ( <call_args> ) <exp'> ; <bloco> } <func> $ 
+[id, fib, 15, 9]
+
+( <call_args> ) <exp'> ; <bloco> } <func> $ 
+[(, (, 15, 10]
+
+<call_args> ) <exp'> ; <bloco> } <func> $ 
+[id, b, 15, 11]
+
+<termo> <call_args'> ) <exp'> ; <bloco> } <func> $ 
+[id, b, 15, 11]
+
+id <call_args'> ) <exp'> ; <bloco> } <func> $ 
+[id, b, 15, 11]
+
+<call_args'> ) <exp'> ; <bloco> } <func> $ 
+[,, ,, 15, 12]
+
+, <termo> <call_args'> ) <exp'> ; <bloco> } <func> $ 
+[,, ,, 15, 12]
+
+<termo> <call_args'> ) <exp'> ; <bloco> } <func> $ 
+[INumber, 5, 15, 14]
+
+constante <call_args'> ) <exp'> ; <bloco> } <func> $ 
+[INumber, 5, 15, 14]
+
+<call_args'> ) <exp'> ; <bloco> } <func> $ 
+[), ), 15, 15]
+
+empty ) <exp'> ; <bloco> } <func> $ 
+[), ), 15, 15]
+
+) <exp'> ; <bloco> } <func> $ 
+[), ), 15, 15]
+
+<exp'> ; <bloco> } <func> $ 
+[;, ;, 15, 16]
+
+empty ; <bloco> } <func> $ 
+[;, ;, 15, 16]
+
+; <bloco> } <func> $ 
+[;, ;, 15, 16]
+
+<bloco> } <func> $ 
+[while, while, 16, 6]
+
+<comando> <bloco> } <func> $ 
+[while, while, 16, 6]
+
+<while> <bloco> } <func> $ 
+[while, while, 16, 6]
+
+while ( <exp> ) { <bloco> } <bloco> } <func> $ 
+[while, while, 16, 6]
+
+( <exp> ) { <bloco> } <bloco> } <func> $ 
+[(, (, 16, 8]
+
+<exp> ) { <bloco> } <bloco> } <func> $ 
+[id, a, 16, 9]
+
+<termo> <exp'> ) { <bloco> } <bloco> } <func> $ 
+[id, a, 16, 9]
+
+id <exp'> ) { <bloco> } <bloco> } <func> $ 
+[id, a, 16, 9]
+
+<exp'> ) { <bloco> } <bloco> } <func> $ 
+[opL, less, 16, 11]
+
+opL <termo> ) { <bloco> } <bloco> } <func> $ 
+[opL, less, 16, 11]
+
+<termo> ) { <bloco> } <bloco> } <func> $ 
+[INumber, 3, 16, 13]
+
+constante ) { <bloco> } <bloco> } <func> $ 
+[INumber, 3, 16, 13]
+
+) { <bloco> } <bloco> } <func> $ 
+[), ), 16, 14]
+
+{ <bloco> } <bloco> } <func> $ 
+[{, {, 16, 16]
+
+<bloco> } <bloco> } <func> $ 
+[print, print, 17, 7]
+
+<comando> <bloco> } <bloco> } <func> $ 
+[print, print, 17, 7]
+
+<print> <bloco> } <bloco> } <func> $ 
+[print, print, 17, 7]
+
+print ( <termo> <print'> ) ; <bloco> } <bloco> } <func> $ 
+[print, print, 17, 7]
+
+( <termo> <print'> ) ; <bloco> } <bloco> } <func> $ 
+[(, (, 17, 8]
+
+<termo> <print'> ) ; <bloco> } <bloco> } <func> $ 
+[id, a, 17, 9]
+
+id <print'> ) ; <bloco> } <bloco> } <func> $ 
+[id, a, 17, 9]
+
+<print'> ) ; <bloco> } <bloco> } <func> $ 
+[), ), 17, 10]
+
+empty ) ; <bloco> } <bloco> } <func> $ 
+[), ), 17, 10]
+
+) ; <bloco> } <bloco> } <func> $ 
+[), ), 17, 10]
+
+; <bloco> } <bloco> } <func> $ 
+[;, ;, 17, 11]
+
+<bloco> } <bloco> } <func> $ 
+[id, a, 18, 3]
+
+<comando> <bloco> } <bloco> } <func> $ 
+[id, a, 18, 3]
+
+<exp_atrib> <bloco> } <bloco> } <func> $ 
+[id, a, 18, 3]
+
+id = <exp> ; <bloco> } <bloco> } <func> $ 
+[id, a, 18, 3]
+
+= <exp> ; <bloco> } <bloco> } <func> $ 
+[=, =, 18, 5]
+
+<exp> ; <bloco> } <bloco> } <func> $ 
+[id, a, 18, 7]
+
+<termo> <exp'> ; <bloco> } <bloco> } <func> $ 
+[id, a, 18, 7]
+
+id <exp'> ; <bloco> } <bloco> } <func> $ 
+[id, a, 18, 7]
+
+<exp'> ; <bloco> } <bloco> } <func> $ 
+[opM, mul, 18, 9]
+
+opM <termo> <exp'> ; <bloco> } <bloco> } <func> $ 
+[opM, mul, 18, 9]
+
+<termo> <exp'> ; <bloco> } <bloco> } <func> $ 
+[(, (, 18, 11]
+
+( <exp> ) <exp'> ; <bloco> } <bloco> } <func> $ 
+[(, (, 18, 11]
+
+<exp> ) <exp'> ; <bloco> } <bloco> } <func> $ 
+[INumber, 1, 18, 12]
+
+<termo> <exp'> ) <exp'> ; <bloco> } <bloco> } <func> $ 
+[INumber, 1, 18, 12]
+
+constante <exp'> ) <exp'> ; <bloco> } <bloco> } <func> $ 
+[INumber, 1, 18, 12]
+
+<exp'> ) <exp'> ; <bloco> } <bloco> } <func> $ 
+[opM, add, 18, 14]
+
+opM <termo> <exp'> ) <exp'> ; <bloco> } <bloco> } <func> $ 
+[opM, add, 18, 14]
+
+<termo> <exp'> ) <exp'> ; <bloco> } <bloco> } <func> $ 
+[INumber, 3, 18, 16]
+
+constante <exp'> ) <exp'> ; <bloco> } <bloco> } <func> $ 
+[INumber, 3, 18, 16]
+
+<exp'> ) <exp'> ; <bloco> } <bloco> } <func> $ 
+[), ), 18, 17]
+
+empty ) <exp'> ; <bloco> } <bloco> } <func> $ 
+[), ), 18, 17]
+
+) <exp'> ; <bloco> } <bloco> } <func> $ 
+[), ), 18, 17]
+
+<exp'> ; <bloco> } <bloco> } <func> $ 
+[;, ;, 18, 18]
+
+empty ; <bloco> } <bloco> } <func> $ 
+[;, ;, 18, 18]
+
+; <bloco> } <bloco> } <func> $ 
+[;, ;, 18, 18]
+
+<bloco> } <bloco> } <func> $ 
+[}, }, 19, 2]
+
+empty } <bloco> } <func> $ 
+[}, }, 19, 2]
+
+} <bloco> } <func> $ 
+[}, }, 19, 2]
+
+<bloco> } <func> $ 
+[return, return, 20, 7]
+
+<comando> <bloco> } <func> $ 
+[return, return, 20, 7]
+
+<return_exp> <bloco> } <func> $ 
+[return, return, 20, 7]
+
+return <termo> ; <bloco> } <func> $ 
+[return, return, 20, 7]
+
+<termo> ; <bloco> } <func> $ 
+[INumber, 0, 20, 9]
+
+constante ; <bloco> } <func> $ 
+[INumber, 0, 20, 9]
+
+; <bloco> } <func> $ 
+[;, ;, 20, 10]
+
+<bloco> } <func> $ 
+[}, }, 21, 1]
+
+empty } <func> $ 
+[}, }, 21, 1]
+
+} <func> $ 
+[}, }, 21, 1]
 
 <func> $ 
 [$, $, -1, -1]

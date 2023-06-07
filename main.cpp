@@ -3,12 +3,11 @@ autor: Lucas Gabriel de Godoi Arriel
 data inicial: 02/03/2023
 */
 //Import das bibliotecas
-//#include <bits/stdc++.h>
 #include <iostream>
 #include <random>
 #include <chrono>
 #include <fstream>
-#include "compilador.h"
+#include "./my_lib/compilador.h"
 
 //Definir estado random
 std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
@@ -37,7 +36,6 @@ int main(int argc, char* argv[]) {
     outFile = std::ofstream("output_AST.txt");
     compilador::print_ast(outFile);
     outFile.close();
-
 
     outFile = std::ofstream("output_semantic.txt");
     compilador::run_semantic(outFile);

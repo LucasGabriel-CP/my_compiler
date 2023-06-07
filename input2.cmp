@@ -1,8 +1,20 @@
+def fib ( int n, int y ) {
+	int e;
+	e = 1;
+	if (n <= 2) {
+		return 2;
+	}
+	else {
+		return 42;
+	}
+}
+
 def main ( ) {
 	int a, b, c;
 	float d;
 	string e;
 	read(a, b);
+	a = #fib(b, 5);
 	while (a < 3) {
 		print(a);
 		a = a * (1 + 3);

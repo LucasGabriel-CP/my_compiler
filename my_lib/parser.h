@@ -11,10 +11,10 @@
 #include<random>
 #include<stack>
 #include"lexer.h"
-#include"token.h"
-#include"SyntaxTree.h"
-#include"Node.h"
-#include "HashMatrix.h"
+#include"./util/token.h"
+#include"./util/SyntaxTree.h"
+#include"./util/Node.h"
+#include "./util/HashMatrix.h"
 
 class parser : public lexer{
 private:

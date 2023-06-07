@@ -10,8 +10,8 @@
 #include<fstream>
 #include<chrono>
 #include<random>
-#include "token.h"
-#include "HashMatrix.h"
+#include "./util/token.h"
+#include "./util/HashMatrix.h"
 
 class lexer : public HashMatrix{
 private:

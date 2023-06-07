@@ -1,116 +1,215 @@
   NULL - <func> | <func>
     <func> - def | def
-    <func> - id | main
+    <func> - id | fib
     <func> - ( | (
     <func> - <arg> | <arg>
-      <arg> - empty | )
+      <arg> - int | int
+      <arg> - id | n
+      <arg> - <arg'> | <arg'>
+        <arg'> - , | ,
+        <arg'> - <tipo_arg> | <tipo_arg>
+          <tipo_arg> - int | int
+        <arg'> - id | y
+        <arg'> - <arg'> | <arg'>
+          <arg'> - empty | )
     <func> - ) | )
     <func> - { | {
     <func> - <bloco> | <bloco>
       <bloco> - <comando> | <comando>
         <comando> - <decl> | <decl>
           <decl> - int | int
-          <decl> - id | a
+          <decl> - id | e
           <decl> - <decl'> | <decl'>
-            <decl'> - , | ,
-            <decl'> - id | b
-            <decl'> - <decl'> | <decl'>
-              <decl'> - , | ,
-              <decl'> - id | c
-              <decl'> - <decl'> | <decl'>
-                <decl'> - empty | ;
+            <decl'> - empty | ;
           <decl> - ; | ;
       <bloco> - <bloco> | <bloco>
         <bloco> - <comando> | <comando>
+          <comando> - <exp_atrib> | <exp_atrib>
+            <exp_atrib> - id | e
+            <exp_atrib> - = | =
+            <exp_atrib> - <exp> | <exp>
+              <exp> - <termo> | <termo>
+                <termo> - INumber | 1
+              <exp> - <exp'> | <exp'>
+                <exp'> - empty | ;
+            <exp_atrib> - ; | ;
+        <bloco> - <bloco> | <bloco>
+          <bloco> - <comando> | <comando>
+            <comando> - <if> | <if>
+              <if> - if | if
+              <if> - ( | (
+              <if> - <exp> | <exp>
+                <exp> - <termo> | <termo>
+                  <termo> - id | n
+                <exp> - <exp'> | <exp'>
+                  <exp'> - opL | less_equal
+                  <exp'> - <termo> | <termo>
+                    <termo> - INumber | 2
+              <if> - ) | )
+              <if> - { | {
+              <if> - <bloco> | <bloco>
+                <bloco> - <comando> | <comando>
+                  <comando> - <return_exp> | <return_exp>
+                    <return_exp> - return | return
+                    <return_exp> - <termo> | <termo>
+                      <termo> - INumber | 2
+                    <return_exp> - ; | ;
+                <bloco> - <bloco> | <bloco>
+                  <bloco> - empty | }
+              <if> - } | }
+              <if> - <else> | <else>
+                <else> - else | else
+                <else> - { | {
+                <else> - <bloco> | <bloco>
+                  <bloco> - <comando> | <comando>
+                    <comando> - <return_exp> | <return_exp>
+                      <return_exp> - return | return
+                      <return_exp> - <termo> | <termo>
+                        <termo> - INumber | 42
+                      <return_exp> - ; | ;
+                  <bloco> - <bloco> | <bloco>
+                    <bloco> - empty | }
+                <else> - } | }
+          <bloco> - <bloco> | <bloco>
+            <bloco> - empty | }
+    <func> - } | }
+    <func> - <func> | <func>
+      <func> - def | def
+      <func> - id | main
+      <func> - ( | (
+      <func> - <arg> | <arg>
+        <arg> - empty | )
+      <func> - ) | )
+      <func> - { | {
+      <func> - <bloco> | <bloco>
+        <bloco> - <comando> | <comando>
           <comando> - <decl> | <decl>
-            <decl> - float | float
-            <decl> - id | d
+            <decl> - int | int
+            <decl> - id | a
             <decl> - <decl'> | <decl'>
-              <decl'> - empty | ;
+              <decl'> - , | ,
+              <decl'> - id | b
+              <decl'> - <decl'> | <decl'>
+                <decl'> - , | ,
+                <decl'> - id | c
+                <decl'> - <decl'> | <decl'>
+                  <decl'> - empty | ;
             <decl> - ; | ;
         <bloco> - <bloco> | <bloco>
           <bloco> - <comando> | <comando>
             <comando> - <decl> | <decl>
-              <decl> - string | string
-              <decl> - id | e
+              <decl> - float | float
+              <decl> - id | d
               <decl> - <decl'> | <decl'>
                 <decl'> - empty | ;
               <decl> - ; | ;
           <bloco> - <bloco> | <bloco>
             <bloco> - <comando> | <comando>
-              <comando> - <read> | <read>
-                <read> - read | read
-                <read> - ( | (
-                <read> - id | a
-                <read> - <read'> | <read'>
-                  <read'> - , | ,
-                  <read'> - id | b
-                  <read'> - <read'> | <read'>
-                    <read'> - empty | )
-                <read> - ) | )
-                <read> - ; | ;
+              <comando> - <decl> | <decl>
+                <decl> - string | string
+                <decl> - id | e
+                <decl> - <decl'> | <decl'>
+                  <decl'> - empty | ;
+                <decl> - ; | ;
             <bloco> - <bloco> | <bloco>
               <bloco> - <comando> | <comando>
-                <comando> - <while> | <while>
-                  <while> - while | while
-                  <while> - ( | (
-                  <while> - <exp> | <exp>
-                    <exp> - <termo> | <termo>
-                      <termo> - id | a
-                    <exp> - <exp'> | <exp'>
-                      <exp'> - opL | less
-                      <exp'> - <termo> | <termo>
-                        <termo> - INumber | 3
-                  <while> - ) | )
-                  <while> - { | {
-                  <while> - <bloco> | <bloco>
-                    <bloco> - <comando> | <comando>
-                      <comando> - <print> | <print>
-                        <print> - print | print
-                        <print> - ( | (
-                        <print> - <termo> | <termo>
-                          <termo> - id | a
-                        <print> - <print'> | <print'>
-                          <print'> - empty | )
-                        <print> - ) | )
-                        <print> - ; | ;
-                    <bloco> - <bloco> | <bloco>
-                      <bloco> - <comando> | <comando>
-                        <comando> - <exp_atrib> | <exp_atrib>
-                          <exp_atrib> - id | a
-                          <exp_atrib> - = | =
-                          <exp_atrib> - <exp> | <exp>
-                            <exp> - <termo> | <termo>
-                              <termo> - id | a
-                            <exp> - <exp'> | <exp'>
-                              <exp'> - opM | mul
-                              <exp'> - <termo> | <termo>
-                                <termo> - ( | (
-                                <termo> - <exp> | <exp>
-                                  <exp> - <termo> | <termo>
-                                    <termo> - INumber | 1
-                                  <exp> - <exp'> | <exp'>
-                                    <exp'> - opM | add
-                                    <exp'> - <termo> | <termo>
-                                      <termo> - INumber | 3
-                                    <exp'> - <exp'> | <exp'>
-                                      <exp'> - empty | )
-                                <termo> - ) | )
-                              <exp'> - <exp'> | <exp'>
-                                <exp'> - empty | ;
-                          <exp_atrib> - ; | ;
-                      <bloco> - <bloco> | <bloco>
-                        <bloco> - empty | }
-                  <while> - } | }
+                <comando> - <read> | <read>
+                  <read> - read | read
+                  <read> - ( | (
+                  <read> - id | a
+                  <read> - <read'> | <read'>
+                    <read'> - , | ,
+                    <read'> - id | b
+                    <read'> - <read'> | <read'>
+                      <read'> - empty | )
+                  <read> - ) | )
+                  <read> - ; | ;
               <bloco> - <bloco> | <bloco>
                 <bloco> - <comando> | <comando>
-                  <comando> - <return_exp> | <return_exp>
-                    <return_exp> - return | return
-                    <return_exp> - <termo> | <termo>
-                      <termo> - INumber | 0
-                    <return_exp> - ; | ;
+                  <comando> - <exp_atrib> | <exp_atrib>
+                    <exp_atrib> - id | a
+                    <exp_atrib> - = | =
+                    <exp_atrib> - <exp> | <exp>
+                      <exp> - <termo> | <termo>
+                        <termo> - <func_cal> | <func_cal>
+                          <func_cal> - # | #
+                          <func_cal> - id | fib
+                          <func_cal> - ( | (
+                          <func_cal> - <call_args> | <call_args>
+                            <call_args> - <termo> | <termo>
+                              <termo> - id | b
+                            <call_args> - <call_args'> | <call_args'>
+                              <call_args'> - , | ,
+                              <call_args'> - <termo> | <termo>
+                                <termo> - INumber | 5
+                              <call_args'> - <call_args'> | <call_args'>
+                                <call_args'> - empty | )
+                          <func_cal> - ) | )
+                      <exp> - <exp'> | <exp'>
+                        <exp'> - empty | ;
+                    <exp_atrib> - ; | ;
                 <bloco> - <bloco> | <bloco>
-                  <bloco> - empty | }
-    <func> - } | }
-    <func> - <func> | <func>
-      <func> - empty | $
+                  <bloco> - <comando> | <comando>
+                    <comando> - <while> | <while>
+                      <while> - while | while
+                      <while> - ( | (
+                      <while> - <exp> | <exp>
+                        <exp> - <termo> | <termo>
+                          <termo> - id | a
+                        <exp> - <exp'> | <exp'>
+                          <exp'> - opL | less
+                          <exp'> - <termo> | <termo>
+                            <termo> - INumber | 3
+                      <while> - ) | )
+                      <while> - { | {
+                      <while> - <bloco> | <bloco>
+                        <bloco> - <comando> | <comando>
+                          <comando> - <print> | <print>
+                            <print> - print | print
+                            <print> - ( | (
+                            <print> - <termo> | <termo>
+                              <termo> - id | a
+                            <print> - <print'> | <print'>
+                              <print'> - empty | )
+                            <print> - ) | )
+                            <print> - ; | ;
+                        <bloco> - <bloco> | <bloco>
+                          <bloco> - <comando> | <comando>
+                            <comando> - <exp_atrib> | <exp_atrib>
+                              <exp_atrib> - id | a
+                              <exp_atrib> - = | =
+                              <exp_atrib> - <exp> | <exp>
+                                <exp> - <termo> | <termo>
+                                  <termo> - id | a
+                                <exp> - <exp'> | <exp'>
+                                  <exp'> - opM | mul
+                                  <exp'> - <termo> | <termo>
+                                    <termo> - ( | (
+                                    <termo> - <exp> | <exp>
+                                      <exp> - <termo> | <termo>
+                                        <termo> - INumber | 1
+                                      <exp> - <exp'> | <exp'>
+                                        <exp'> - opM | add
+                                        <exp'> - <termo> | <termo>
+                                          <termo> - INumber | 3
+                                        <exp'> - <exp'> | <exp'>
+                                          <exp'> - empty | )
+                                    <termo> - ) | )
+                                  <exp'> - <exp'> | <exp'>
+                                    <exp'> - empty | ;
+                              <exp_atrib> - ; | ;
+                          <bloco> - <bloco> | <bloco>
+                            <bloco> - empty | }
+                      <while> - } | }
+                  <bloco> - <bloco> | <bloco>
+                    <bloco> - <comando> | <comando>
+                      <comando> - <return_exp> | <return_exp>
+                        <return_exp> - return | return
+                        <return_exp> - <termo> | <termo>
+                          <termo> - INumber | 0
+                        <return_exp> - ; | ;
+                    <bloco> - <bloco> | <bloco>
+                      <bloco> - empty | }
+      <func> - } | }
+      <func> - <func> | <func>
+        <func> - empty | $

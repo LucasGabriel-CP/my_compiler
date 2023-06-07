@@ -32,7 +32,7 @@ public:
         custom_hash> table;
     std::map<std::string, std::string> parent;
     std::string add_id(std::string id_name, std::string decl_type, std::string scope, std::pair<int, int> posi);
-    bool check_decl(std::string id_name, std::string scope);
+    bool check_decl(std::string id_name, std::string scope, std::string &par);
     HashMatrix();
     ~HashMatrix();
 };
